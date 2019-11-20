@@ -1,0 +1,19 @@
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+
+	# Change example.com/index.php?controller=home&action=index&param1=test&param=test12
+	# to example.com/home/action/test/test12
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteRule ^([^/]+)/([^/]+)/(.+)?$ index.php?controller=$1&action=$2&params=$3 [L]
+
+	# Change index.php?controller=home&action=index
+	# to example.com/home/action
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteRule ^([^/]+)/([^/]+)/?$ index.php?controller=$1&action=$2 [L]
+	
+	# Change index.php?controller=home
+	# to example.com/home
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteRule ^([^/]+)/?$  index.php?controller=$1 [QSA,L]
+</IfModule>

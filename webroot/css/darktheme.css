@@ -1,0 +1,22 @@
+.navbar-default {
+    background-color: #515152;
+    border-color: #515152;
+    color: rgb(21, 184, 184);
+}
+
+body {
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: rgb(21, 184, 184);
+    background-color: #000;
+}
+
+.navbar-brand {
+    float: left;
+    height: 50px;
+    padding: 15px 15px;
+    font-size: 18px;
+    line-height: 20px;
+    color: rgb(21, 184, 184);
+}
