@@ -31,6 +31,9 @@ define("TEMPLATING_ENGINE", ROOT . DS . "vendors" . DS . "smarty" . DS);
 // Path to php mailer
 define("PHP_MAILER", ROOT . DS . "vendors" . DS . "phpmailer" . DS . "src" . DS);
 
+//Path to FPDF
+define("FPDF", ROOT . DS . "vendors" . DS . "FPDF" . DS);
+
 // Path to the temp directory
 define("TMP", ROOT . DS . "tmp" . DS);
 
