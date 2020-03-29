@@ -8,7 +8,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a href="{$www}" class="navbar-brand">Gekke Koe</a> </div>
+            <a href="{$www}" class="navbar-brand">Ka-ching</a> </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="{$www}/user/search" id="user-login">Search</a></li>

@@ -167,7 +167,7 @@ function autoload($class)
 				require_once $lib;
 			}
 		}
-		}
+		
 	}
 }
 

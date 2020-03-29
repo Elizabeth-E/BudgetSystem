@@ -22,9 +22,13 @@ class AccountsController extends AppController
     public function accountOverview(array $params)
     {
         $this->setLayout("authenticated");
-        $username = $this->model->getUsername($_SESSION["email"]);
+        
+        $username = \Framework\CryptXOR($_SESSION["username"]);
+        $accounts = $this->model->getAccounts((int) $_SESSION["userId"]);
+        // $accounts = getAccount(int $userid);
 
         $this->view->assign("username", $username);
+        $this->view->assign("accounts", $accounts);
 
         $this->view->assign("title", "Accounts");
         $this->view->display("accounts/accountsOverview.tpl");

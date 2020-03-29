@@ -5,7 +5,7 @@
         <h2 class="section-heading">user profile</h2>
         <div class="container">
             <div class="row">
-                <div class="col-md-7 ">
+                <div class="col-md-offset-1  ">
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <h4 style="color:#03b1ce;">{$profile["username"]} </h4></span>
