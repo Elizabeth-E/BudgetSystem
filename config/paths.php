@@ -8,7 +8,7 @@ if (!defined("DS"))
 }
 
 // URL location of the MVC system
-define("BASE_URL", "http://" . $_SERVER['SERVER_NAME'] . "/BudgetSystem");
+define("BASE_URL", "http://" . $_SERVER['SERVER_NAME'] . "/budget_system");
 
 // The full path to the directory which holds "src", WITHOUT a trailing DS.
 define("ROOT", dirname(__DIR__));
