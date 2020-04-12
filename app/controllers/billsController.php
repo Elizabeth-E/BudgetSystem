@@ -22,9 +22,12 @@ class BillsController extends AppController
     public function billsOverview(array $params)
     {
         $this->setLayout("authenticated");
-        $username = $this->model->getUsername($_SESSION["email"]);
+        $username = \Framework\CryptXOR($_SESSION["username"]);
+        $bills = $this->model->getBills($username);
+        
 
         $this->view->assign("username", $username);
+        $this->view->assign("bills", $bills);
 
         $this->view->assign("title", "Accounts");
         $this->view->display("bills/overview.tpl");
