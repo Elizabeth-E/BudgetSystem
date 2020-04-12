@@ -27,13 +27,50 @@
                             {/foreach}
                              </tbody>
                          </table>
+                         <a href="{$www}/user/edit_profile">
+                    <button class="btn btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>add account</button>
+                </a>
+                      <a href="{$www}/accounts/generatePDF">
+                    <button class="btn btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Generate PDF</button>
+                </a>
        
 
 	                </div>                  
                 </div>
-                <a href="{$www}/?controller=user&action=edit_profile">
-                    <button class="btn btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>add account</button>
-                </a>
+
+                {foreach from=$accounts item=info}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 style="color:#03b1ce;">{$info["accountname"]} </h4></span>
+                    </div>
+                    <div class="container">
+                         <table  class="table table-striped">
+                             <thead>
+                                 <th scope="col-md-3">date</th>
+                                 <th scope="col-md-3">name</th>
+                                 <th scope="col-md-3">description</th>
+                                 <th scope="col-md-3">amount</th>
+                             </thead>
+                             <tbody>
+                             
+                             {foreach from=$transactions item=action}
+                             {if $info["id"] eq $action["accounts_id"]}
+                                <tr>
+                                    <td>{$action["date"]}</td>
+                                    <td>{$action["name"]}</td>
+                                    <td>{$action["description"]}</td>
+                                    <td>{$action["amount"]}</td>
+                                </tr>
+                                {/if}
+                                {/foreach}
+                             </tbody>
+                         </table>
+       
+
+	                </div>                  
+                </div>
+                {/foreach}
+                
             </div>
         </div>
     </div>

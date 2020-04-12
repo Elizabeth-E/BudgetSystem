@@ -72,7 +72,7 @@ class AccountsModel extends AppModel
 
     public function getAccounts(int $userid)
     {
-        $dbHandle = $this->database->prepare("SELECT accounts.type, accounts.amount, accounts.accountname, accounts.accountnum 
+        $dbHandle = $this->database->prepare("SELECT accounts.type, accounts.amount, accounts.accountname, accounts.accountnum, accounts.id 
         FROM accounts INNER JOIN users_has_accounts ON accounts.id = users_has_accounts.accounts_id WHERE users_has_accounts.users_id = ?");
 		$dbHandle->bind_param("i", $userid);
         $dbHandle->execute();
@@ -87,10 +87,38 @@ class AccountsModel extends AppModel
                     "accountname" => $row["accountname"],
                     "type" => $row["type"],
                     "amount" => $row["amount"],
-                    "accountnum" => $row["accountnum"]
+                    "accountnum" => $row["accountnum"],
+                    "id" => $row["id"]
                 ];
             }
             return $accounts;
+        }
+    }
+
+    public function getTransactions(int $userid)
+    {
+        //SELECT transactions.date, transactions.name, transactions.description, transactions.amount, transactions.accounts_id FROM(( transactions INNER JOIN accounts ON transactions.accounts_id=accounts.id) INNER JOIN users_has_accounts ON accounts.id = users_has_accounts.accounts_id) WHERE users_has_accounts.users_id = 15
+        $dbHandle = $this->database->prepare("SELECT transactions.date, transactions.name, transactions.description, transactions.amount, transactions.accounts_id 
+        FROM(( transactions INNER JOIN accounts ON transactions.accounts_id=accounts.id) INNER JOIN users_has_accounts ON accounts.id = users_has_accounts.accounts_id)
+         WHERE users_has_accounts.users_id = ?");
+		$dbHandle->bind_param("i", $userid);
+        $dbHandle->execute();
+
+        $result = $dbHandle->get_result();
+
+        $transactions = [];
+		if ($result->num_rows > 0)
+		{
+            while($row = $result->fetch_assoc()) {
+                $transactions[] = [
+                    "date" => $row["date"],
+                    "name" => $row["name"],
+                    "description" => $row["description"],
+                    "amount" => $row["amount"],
+                    "accounts_id" => $row["accounts_id"]
+                ];
+            }
+            return $transactions;
         }
     }
 }

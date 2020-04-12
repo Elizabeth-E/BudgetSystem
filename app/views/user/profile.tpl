@@ -25,6 +25,11 @@
                                             id="profile-image1" class="img-circle img-responsive">
 
                                         <input id="profile-image-upload" class="hidden" type="file">
+                                        <form method="post" enctype="multipart/form-data" name="formUploadFile">      
+                                            <label>Select file to upload:</label>
+                                            <input type="file" name="files[]" multiple="multiple" />
+                                            <input type="submit" value="Upload File" name="btnSubmit"/>
+                                        </form>
                                         <div style="color:#999;">click here to change profile image</div>
                                         <!--Upload Image Js And Css-->
 
