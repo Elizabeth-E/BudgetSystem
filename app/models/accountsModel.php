@@ -121,5 +121,35 @@ class AccountsModel extends AppModel
             return $transactions;
         }
     }
+
+    public function getExportInfo($accountids)
+    {
+        // Dynamically generate placeholders & bind parameters
+        $count = count($accountids);
+        $placeholders = implode(',', array_fill(0, $count, '?'));
+        $bindStr = str_repeat('i', $count);
+        
+        $dbHandle = $this->database->prepare("SELECT accounts_id, date, name, description, amount FROM transactions WHERE accounts_id IN ($placeholders)");
+		$dbHandle->bind_param($bindStr, ...$accountids);
+        $dbHandle->execute();
+
+        $result = $dbHandle->get_result();
+        $transactions = [];
+		if ($result->num_rows > 0)
+		{
+            while($row = $result->fetch_assoc()) {
+                $transactions[] = [
+                    "accounts_id" => $row["accounts_id"],
+                    "date" => $row["date"],
+                    "name" => $row["name"],
+                    "description" => $row["description"],
+                    "amount" => $row["amount"],
+                ];
+            }
+        }
+        return $transactions;
+
+    }
+
 }
 ?>

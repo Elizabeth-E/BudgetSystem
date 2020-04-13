@@ -95,6 +95,113 @@ class AccountsController extends AppController
         $pdf->Output();
 
     }
+
+    public function import()
+    {
+        if ( ! empty($_FILES)) {
+            // Parse uploaded file
+            $parsedData = [];
+            $name = $_FILES["file"]["tmp_name"];
+            $size = $_FILES["file"]["size"];
+        
+            $fh = fopen($name, "r");
+            while ($data = fgetcsv($fh, $size, ",")) {
+                $parsedData[] = $data;
+            }
+            fclose($fh);
+        
+            // Remove headers (first line)
+            unset($parsedData[0]);
+        
+            // Read parsed data and put into database
+            $stmt = $mysqli->prepare("INSERT INTO data (name, email, date_of_birth) VALUES (?,?,?)");
+            foreach($parsedData as $data) {
+                $stmt->bind_param("sss", $data[1], $data[2], $data[3]);
+                $stmt->execute();
+                $res = $stmt->get_result();
+            }
+            $stmt->close();
+        }
+
+    }
+
+    public function export()
+    {
+        /*
+        // Tell the browser that a file of type text/csv is offered
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename=data.csv');
+
+        // Disable cache
+        header("Expires: 0");
+        header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+        header("Cache-Control: private", false);
+        */
+
+        $accountIds = [12,15];
+        $transactions = $this->model->getExportInfo($accountIds);
+    
+
+        // Print the CSV output (will be directly placed in the file)
+        $csv = "";
+        $csv .= "id,name,email,date_of_birth\n";
+        while($row = $res->fetch_assoc()) {
+            $csv .= "{$row["id"]},";
+            $csv .= "{$row["name"]},";
+            $csv .= "{$row["email"]},";
+            $csv .= "{$row["date_of_birth"]}\n";
+        }
+        echo $csv;
+
+    }
+
+    public function exportXls()
+    {
+        /*
+        header("Content-Type: application/vnd.ms-excel;");
+        header("Content-Disposition: attachment; filename=data.xlsx");
+
+        // Disable cache
+        header("Expires: 0");
+        header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+        header("Cache-Control: private", false);
+
+        // https://phpspreadsheet.readthedocs.io/en/latest/
+        // IMPORTANT: See this (https://github.com/PHPOffice/PhpSpreadsheet/issues/31)
+        include_once 'PhpSpreadsheet/autoloader.php';
+        include_once 'PhpSpreadsheet/autoload.php';
+        include_once 'database.php';
+
+        use PhpOffice\PhpSpreadsheet\Spreadsheet;
+        use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
+   
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Create headers
+        $counter = 2;
+        $sheet->setCellValue("A1", "id");
+        $sheet->setCellValue("B1", "name");
+        $sheet->setCellValue("C1", "email");
+        $sheet->setCellValue("D1", "date_of_birth");
+
+        // Create body
+        while($row = $res->fetch_assoc()) {
+            $sheet->setCellValue("A{$counter}", $row["id"]);
+            $sheet->setCellValue("B{$counter}", $row["name"]);
+            $sheet->setCellValue("C{$counter}", $row["email"]);
+            $sheet->setCellValue("D{$counter}", $row["date_of_birth"]);
+            
+            $counter++;
+        }
+
+        $writer = new Xlsx($spreadsheet);
+        // $writer->save('data.xlsx'); // Save to file
+        $writer->save('php://output'); // Print to STDOUT
+        */
+    }
    
 }
 ?>
