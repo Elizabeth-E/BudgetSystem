@@ -12,9 +12,10 @@
             <h2 class="section-heading">Bills Overview</h2>
             <button type="button" class="btn btn-default" data-toggle="modal" data-target="#basicExampleModal">add
               bill</button>
+            <button type="button" class="btn btn-default">edit bill(s)</button>
 
 
-            <table class="table table-striped">
+            <table class="table table-striped" id="viewbills">
               <thead>
                 <th scope="col-md-3">name</th>
                 <th scope="col-md-3">amount</th>
@@ -34,6 +35,47 @@
                 {/foreach}
               </tbody>
             </table>
+            
+            <!-- Editable table -->
+            <div class="card" id="editbills">
+              <h3 class="card-header text-center font-weight-bold text-uppercase py-4">Edit Bills</h3>
+              <div class="card-body">
+                <div id="table" class="table-editable">
+                  <table class="table table-bordered table-responsive-md table-striped text-center">
+                    <thead>
+                      <th scope="col-md-3">name</th>
+                      <th scope="col-md-3">amount</th>
+                      <th scope="col-md-3">date</th>
+                      <th scope="col-md-3">frequency</th>
+                      <th scope="col-md-3">account</th>
+                    </thead>
+                    <tbody>
+                      {foreach from=$bills item=info}
+                      <tr>
+                        <td class="pt-3-half" contenteditable="true">{$info["name"]}</td>
+                        <td class="pt-3-half" contenteditable="true">{$info["amount"]}</td>
+                        <td class="pt-3-half" contenteditable="true">{$info["date"]}</td>
+                        <td class="pt-3-half" contenteditable="true">{$info["frequency"]}</td>
+                        <td class="pt-3-half" contenteditable="true">{$info["account"]}</td>
+                      </tr>
+                      <span class="table-up"><a href="#!" class="indigo-text"><i class="fas fa-long-arrow-alt-up"
+                            aria-hidden="true"></i></a></span>
+                      <span class="table-down"><a href="#!" class="indigo-text"><i class="fas fa-long-arrow-alt-down"
+                            aria-hidden="true"></i></a></span>
+                      </td>
+                      <td>
+                        <span class="table-remove"><button type="button"
+                            class="btn btn-danger btn-rounded btn-sm my-0">Remove</button></span>
+                      </td>
+                      {/foreach}
+
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <!-- Editable table -->
 
           </div>
         </div>
@@ -56,8 +98,9 @@
           <!-----------------form to add bill----------->
           <form method="post" action="{$POST_URL}">
             <div class="form-group">
-              <label for="bill">Name of bill</label>
-              <input type="text" class="form-control" name="name" id="exampleInputEmail1" placeholder="e.g. Mortgage">
+              <label for="tags">Name of bill</label>
+              <input type="text" class="form-control typeahead twitter-typeahead" data-provide="typeahead" name="name"
+                autocomplete="off" placeholder="e.g. Mortgage">
             </div>
             <div class="form-group">
               <label for="amount">Amount</label>
@@ -68,7 +111,7 @@
               <input type="date" class="form-control" name="date" id="FirstName" placeholder="FirstName">
             </div>
             <div class="form-group">
-              <label for="username">Frequency</label>
+              <label for="frequency">Frequency</label>
               <select id="frequency" name="frequency">
                 <option value="DAILY">daily</option>
                 <option value="WEEKLY">weekly</option>
@@ -80,7 +123,7 @@
               <label for="username">Account</label>
               <select id="category" name="accountId">
                 {foreach from=$accounts item=info}
-                <option value="{$info["accountId"]}">{$info["accountname"]}</option>
+                <option value="{$info[" accountId"]}">{$info["accountname"]}</option>
                 {/foreach}
               </select>
             </div>
@@ -88,13 +131,13 @@
               <label for="username">Bill Category</label>
               <select id="category" name="billCatId">
                 {foreach from=$categories item=info}
-                <option value="{$info["billCatId"]}">{$info["name"]}</option>
+                <option value="{$info[" billCatId"]}">{$info["name"]}</option>
                 {/foreach}
               </select>
             </div>
 
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-default">Add</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="RefreshPage">Close</button>
+            <button type="submit" class="btn btn-default" id="RefreshPage">Add</button>
           </form>
 
           <!----------form end--------->
@@ -104,5 +147,128 @@
   </div>
 
 </main>
+
+<script>
+  $(document).ready(function () {
+    $(".typeahead").typeahead({
+      source: {
+        $billNames
+      },
+      autoSelect: true
+    });
+
+  });
+
+  var a = document.getElementById("viewbills");
+  var b = document.getElementById("editbills");
+
+  a.style.display = "block";
+  b.style.display = "none";
+
+  function viewbills() {
+    if (a.style.display === "none") {
+      a.style.display = "block";
+      b.style.display = "none";
+    }
+  }
+
+  function editbills() {
+    if (b.style.display === "none") {
+      b.style.display = "block";
+      a.style.display = "none";
+    }
+  }
+
+
+
+
+  const $tableID = $('#table');
+  const $BTN = $('#export-btn');
+  const $EXPORT = $('#export');
+
+  const newTr = `
+<tr class="hide">
+  <td class="pt-3-half" contenteditable="true">Example</td>
+  <td class="pt-3-half" contenteditable="true">Example</td>
+  <td class="pt-3-half" contenteditable="true">Example</td>
+  <td class="pt-3-half" contenteditable="true">Example</td>
+  <td class="pt-3-half" contenteditable="true">Example</td>
+  <td class="pt-3-half">
+    <span class="table-up"><a href="#!" class="indigo-text"><i class="fas fa-long-arrow-alt-up" aria-hidden="true"></i></a></span>
+    <span class="table-down"><a href="#!" class="indigo-text"><i class="fas fa-long-arrow-alt-down" aria-hidden="true"></i></a></span>
+  </td>
+  <td>
+    <span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 waves-effect waves-light">Remove</button></span>
+  </td>
+</tr>`;
+
+  $('.table-add').on('click', 'i', () => {
+
+    const $clone = $tableID.find('tbody tr').last().clone(true).removeClass('hide table-line');
+
+    if ($tableID.find('tbody tr').length === 0) {
+
+      $('tbody').append(newTr);
+    }
+
+    $tableID.find('table').append($clone);
+  });
+
+  $tableID.on('click', '.table-remove', function () {
+
+    $(this).parents('tr').detach();
+  });
+
+  $tableID.on('click', '.table-up', function () {
+
+    const $row = $(this).parents('tr');
+
+    if ($row.index() === 0) {
+      return;
+    }
+
+    $row.prev().before($row.get(0));
+  });
+
+  $tableID.on('click', '.table-down', function () {
+
+    const $row = $(this).parents('tr');
+    $row.next().after($row.get(0));
+  });
+
+  // A few jQuery helpers for exporting only
+  jQuery.fn.pop = [].pop;
+  jQuery.fn.shift = [].shift;
+
+  $BTN.on('click', () => {
+
+    const $rows = $tableID.find('tr:not(:hidden)');
+    const headers = [];
+    const data = [];
+
+    // Get the headers (add special header logic here)
+    $($rows.shift()).find('th:not(:empty)').each(function () {
+
+      headers.push($(this).text().toLowerCase());
+    });
+
+    // Turn all existing rows into a loopable array
+    $rows.each(function () {
+      const $td = $(this).find('td');
+      const h = {};
+
+      // Use the headers from earlier to name our hash keys
+      headers.forEach((header, i) => {
+
+        h[header] = $td.eq(i).text();
+      });
+
+      data.push(h);
+    });
+
+    // Output the result
+    $EXPORT.text(JSON.stringify(data));
+  });
+</script>
 
 {include file="{$layout}\\footer.tpl"}

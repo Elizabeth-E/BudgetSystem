@@ -26,7 +26,13 @@ class BillsController extends AppController
         $bills = $this->model->getBills($username);
         $categories = $this->model->getBillCategories();
         $accounts = $this->model->getAccounts((int) $_SESSION["userId"]);
-        // die('adfsadfsadfsad');
+        
+        $billNames = [];
+        foreach($bills as $item){
+            $billNames[] = [
+                'name' => $item['name']
+            ];
+        }
 
         if (!empty($_POST))
 		{
@@ -36,12 +42,10 @@ class BillsController extends AppController
             $frequency = $_POST["frequency"];
             $accountId = $_POST["accountId"];
             $billCatId = $_POST["billCatId"];
+            unset($_POST);
 
-            // \Framework\debug($_POST);
-            // exit();
-    
             $this->model->addBill($name, $amount, $date, $frequency, $accountId, $billCatId);
-            // header("Refresh:0; url=" . BASE_URL . "/bills/billsOverview", true, 200); 
+            header("Refresh:0; url=" . BASE_URL . "/bills/billsOverview", true, 200); 
 		}
 
         $this->view->assign("username", $username);
@@ -49,6 +53,7 @@ class BillsController extends AppController
         $this->view->assign("accounts", $accounts);
         $this->view->assign("categories", $categories);
         $this->view->assign("POST_URL", $this->getUrlSelf());
+        $this->view->assign("billNames", json_encode($billNames));
 
         $this->view->assign("title", "Accounts");
         $this->view->display("bills/overview.tpl");
