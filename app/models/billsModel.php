@@ -54,13 +54,75 @@ class BillsModel extends AppModel
                     "name" => $row["name"],
                     "amount" => $row["amount"],
                     "date" => $row["date"],
-                    "frequency" => $row["frequency"]
+                    "frequency" => $row["frequency"],
+                    "account" => $row["accountname"]
                 ];
             }
 
             return $bills;
         }
 
+    }
+
+      
+    public function addBill(string $name, float $amount, string $date, string $frequency,int $accountId, int $billCatId)
+    {
+        
+        $dbHandle = $this->database->prepare("INSERT INTO bills (name, amount, date, frequency, accounts_id, bill_categories_id) VALUES (?,?,?,?,?,?)");
+		$dbHandle->bind_param("sdssii", $name, $amount, $date, $frequency, $accountId, $billCatId);
+        
+        if (!$dbHandle->execute()) {
+            echo "Execute failed: (" . $dbHandle->errno . ") " . $dbHandle->error;
+        }
+        $dbHandle->close();
+
+    }
+
+    public function getBillCategories()
+    {
+        
+		$dbHandle = $this->database->prepare("SELECT id, name FROM bill_categories");
+        $dbHandle->execute();
+        
+        $result = $dbHandle->get_result();
+
+        $categories = [];
+		if ($result->num_rows > 0)
+		{
+			while($row = $result->fetch_assoc()) {
+                $categories[] = [
+                    "name" => $row["name"],
+                    "billCatId" => $row["id"]
+                ];
+            }
+        }
+        
+        return $categories;
+    }
+
+    public function getAccounts(int $userid)
+    {
+        $dbHandle = $this->database->prepare("SELECT accounts.type, accounts.amount, accounts.accountname, accounts.accountnum, accounts.id 
+        FROM accounts INNER JOIN users_has_accounts ON accounts.id = users_has_accounts.accounts_id WHERE users_has_accounts.users_id = ?");
+		$dbHandle->bind_param("i", $userid);
+        $dbHandle->execute();
+
+        $result = $dbHandle->get_result();
+
+        $accounts = [];
+		if ($result->num_rows > 0)
+		{
+            while($row = $result->fetch_assoc()) {
+                $accounts[] = [
+                    "accountname" => $row["accountname"],
+                    "type" => $row["type"],
+                    "amount" => $row["amount"],
+                    "accountnum" => $row["accountnum"],
+                    "accountId" => $row["id"]
+                ];
+            }
+            return $accounts;
+        }
     }
 
 }
