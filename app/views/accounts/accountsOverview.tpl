@@ -160,39 +160,32 @@
 	<!-- END MODAL IMPORT -->
 </main>
 
-{literal}
 <script>
-
-// Update modal with export type in title (csv, xlsx, etc)
-// Auto-check checkboxes
+let formAction = '{$www}/accounts';
+{literal}
+// Update modals on button click (title, checkboxes & form action)
 $('button[data-target]').click(function(event) {
 	// Update modal title
-	let type = $(this).data('type');
-	let action = $(this).data('action');
+	const type = $(this).data('type');
+	const action = $(this).data('action');
+	const form = $('#' + action + ' div.modal-body form');
 
 	$('#export-name').text(type);
 	$('#import-name').text(type);
 
 	// Auto check checkboxes
-	if (type == 'export') {
-		let form = $('#' + action + ' div.modal-body form');
-		let checkboxes = form.find(':checkbox');
-		
+	if (action == 'export') {
+		const checkboxes = form.find(':checkbox');
+
 		checkboxes.each(function(key, val) {
 			$(val).prop('checked', true);
 		});
 	}
+
+	// Update form action
+	$(form).attr('action', formAction + '/' + action + type);
 });
-
-// Prevent form 
-$('#export div.modal-body form').submit(function(event) {
-	event.preventDefault();
-
-	console.log('export clicked');
-	// $(this).attr('action');
-});
-
-</script>
 {/literal}
+</script>
 
 {include file="{$layout}\\footer.tpl"}
