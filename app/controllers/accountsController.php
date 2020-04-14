@@ -9,6 +9,42 @@ class AccountsController extends AppController
     protected $model = NULL;
 	protected $emailEngine = NULL;
 
+    private function getExportInfo(array $accounts) {
+        // Turn all selected accounts into array
+        $accountIds = [];
+        foreach ($accounts as $account) {
+            $accountIds[] = $account;
+        }
+
+        // Fetch all export info for array of accounts
+        $records = [];
+        if (count($accountIds) > 0) {
+            $records = $this->model->getExportInfo($accountIds);
+        }
+
+        return $records;
+    }
+
+    private function filterExportInfo(array $fields, array $records) {
+        $fields = [];
+        if (count($records) > 0) {
+            foreach ($_POST['fields'] as $key => $val) {
+                $fields[] = $key;
+            }
+        }
+
+        // Only filter selected fields
+        $filteredData = [];
+        foreach ($records as $record) {
+            $filteredData[] = array_intersect_key(
+                $record,
+                array_flip($fields)
+            );
+        }
+
+        return $filteredData;
+    }
+
 	public function __construct(string $action = "", array $params)
 	{
 		parent::__construct($action, $params);
@@ -103,7 +139,38 @@ class AccountsController extends AppController
 
     public function exportcsv(array $params)
     {
-        die('exportcsv');
+        // Get and filter records based on submitted data
+        $records = $this->getExportInfo($_POST['accounts']);
+        $records = $this->filterExportInfo($_POST['fields'], $records);
+
+        ob_clean(); // Clean buffer
+
+        // Tell the browser that a file of type text/csv is offered
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename=data.csv');
+
+        // // Disable cache
+        header("Expires: 0");
+        header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+        header("Cache-Control: private", false);
+
+        // CSV parsing
+        $csvHeaders = ['date', 'name', 'description', 'amount'];
+        $csvBody = implode(',', $csvHeaders) . "\n";
+        
+        foreach ($records as $record) {
+            foreach ($csvHeaders as $header) {
+                if ( ! isset($record[$header])) {
+                    $csvBody .= ',';
+                } else {
+                    $csvBody .= $record[$header] . ',';
+                }
+            }
+            $csvBody = rtrim($csvBody, ',');
+            $csvBody .= "\n";
+        }
+        
+        die($csvBody);
     }
 
     public function exportxls(array $params)

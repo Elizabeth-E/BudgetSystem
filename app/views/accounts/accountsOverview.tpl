@@ -89,24 +89,24 @@
 				</div>
 				<div class="modal-body">
 					<!-- Acttion will be filled by JS -->
-					<form>
+					<form action="" method="post">
 						<div class="form-group">
 							<!-- Show accounts -->
 							<label>Accounts to export:</label>
 
 							{foreach from=$accounts item=info}
 							<div class="checkbox">
-								<label><input type="checkbox"> {$info["accountname"]}</label>
+								<label><input type="checkbox" name="accounts[{$info["accountname"]}]"" value="{$info["id"]}"> {$info["accountname"]}</label>
 							</div>
 							{/foreach}
 
 							<!-- Show fields -->
 							<label>Columns to export:</label>
 
-							<div class="checkbox"><label><input type="checkbox"> Date</label></div>
-							<div class="checkbox"><label><input type="checkbox"> Name</label></div>
-							<div class="checkbox"><label><input type="checkbox"> Description</label></div>
-							<div class="checkbox"><label><input type="checkbox"> Amount</label></div>							
+							<div class="checkbox"><label><input type="checkbox" name="fields[date]" value="true"> Date</label></div>
+							<div class="checkbox"><label><input type="checkbox" name="fields[name]" value="true"> Name</label></div>
+							<div class="checkbox"><label><input type="checkbox" name="fields[description]" value="true"> Description</label></div>
+							<div class="checkbox"><label><input type="checkbox" name="fields[amount]" value="true"> Amount</label></div>							
 						</div>
 						<button type="submit" class="btn btn-default">Submit</button>
 					</form>
@@ -138,7 +138,7 @@
 
 							{foreach from=$accounts item=info}
 							<div class="checkbox">
-								<label><input type="radio"> {$info["accountname"]}</label>
+								<label><input type="radio" name="accountname"> {$info["accountname"]}</label>
 							</div>
 							{/foreach}
 
