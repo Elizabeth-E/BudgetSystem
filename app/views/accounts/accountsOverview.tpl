@@ -31,11 +31,11 @@
 									class="fa fa-pencil-square-o" aria-hidden="true"></i>add account</button></a>
 						<a href="{$www}/accounts/generatePDF" target="_blank"><button class="btn btn-default"><i
 									class="fa fa-pencil-square-o" aria-hidden="true"></i>Generate PDF</button></a>
-						<button type="button" class="btn btn-default" data-toggle="modal" data-target="#import">Import
+						<button type="button" class="btn btn-default" data-toggle="modal" data-action="import" data-type="csv" data-target="#import">Import
 							(CSV)</button>
-						<button type="button" class="btn btn-default" data-toggle="modal" data-target="#export">Export
+						<button type="button" class="btn btn-default" data-toggle="modal" data-action="export" data-type="csv" data-target="#export">Export
 							(CSV)</button>
-						<button type="button" class="btn btn-default" data-toggle="modal" data-target="#export">Export
+						<button type="button" class="btn btn-default" data-toggle="modal" data-action="export" data-type="xls" data-target="#export">Export
 							(XLS)</button>
 					</div>
 				</div>
@@ -82,7 +82,7 @@
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="ModalLabel">Create X export</h5>
+					<h5 class="modal-title" id="ModalLabel">Create <span id="export-name"></span> export</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -119,13 +119,12 @@
 	</div>
 	<!-- END MODAL EXPORT -->
 
-
 	<!-- START MODAL IMPORT -->
 	<div class="modal fade" id="import" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="ModalLabel">Import</h5>
+					<h5 class="modal-title" id="ModalLabel">Import <span id="import-name"></span> file</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -160,5 +159,40 @@
 	</div>
 	<!-- END MODAL IMPORT -->
 </main>
+
+{literal}
+<script>
+
+// Update modal with export type in title (csv, xlsx, etc)
+// Auto-check checkboxes
+$('button[data-target]').click(function(event) {
+	// Update modal title
+	let type = $(this).data('type');
+	let action = $(this).data('action');
+
+	$('#export-name').text(type);
+	$('#import-name').text(type);
+
+	// Auto check checkboxes
+	if (type == 'export') {
+		let form = $('#' + action + ' div.modal-body form');
+		let checkboxes = form.find(':checkbox');
+		
+		checkboxes.each(function(key, val) {
+			$(val).prop('checked', true);
+		});
+	}
+});
+
+// Prevent form 
+$('#export div.modal-body form').submit(function(event) {
+	event.preventDefault();
+
+	console.log('export clicked');
+	// $(this).attr('action');
+});
+
+</script>
+{/literal}
 
 {include file="{$layout}\\footer.tpl"}
