@@ -122,6 +122,41 @@ class AccountsModel extends AppModel
         }
     }
 
+    public function insertTransactions(string $accountId, array $csvData) {
+        // Dynamically generate placeholders & bind parameters
+        $placeholders = '';
+        $bindStr = '';
+        foreach ($csvData as $csvLine) {
+            $count = count($csvLine) +1; // +1 for accountName
+            $placeholders .= '(';
+            $placeholders .= implode(',', array_fill(0, $count, '?'));
+            $placeholders .= '),';
+            $bindStr .= 'sssdi';
+        }
+        $placeholders = rtrim($placeholders, ',');
+
+        // Flatten array from 2D to 1D because bindparams expects a 1D array of parameters
+        $testData = [];
+        foreach ($csvData as $test) {
+            $testData[] = $test[0];
+            $testData[] = $test[1];
+            $testData[] = $test[2];
+            $testData[] = $test[3];
+            $testData[] = $accountId;
+        }
+
+        // Run query
+        $dbHandle = $this->database->prepare("INSERT INTO transactions (date, name, description, amount, accounts_id) VALUES $placeholders");
+        if ( ! $dbHandle->bind_param($bindStr, ...$testData)) {
+            echo "Binding parameters failed: (" . $dbHandle->errno . ") " . $dbHandle->error;
+        }
+        
+        if ( ! $dbHandle->execute()) {
+            echo "Execute failed: (" . $dbHandle->errno . ") " . $dbHandle->error;
+        }
+        $dbHandle->close();
+    }
+
     public function getExportInfo($accountids)
     {
         // Dynamically generate placeholders & bind parameters

@@ -131,22 +131,26 @@
 				</div>
 				<div class="modal-body">
 					<!-- Acttion will be filled by JS -->
-					<form>
+					<form action="" method="post" enctype="multipart/form-data">
 						<div class="form-group">
 							<!-- Show accounts -->
 							<label>Select an account to import too</label>
 
 							{foreach from=$accounts item=info}
 							<div class="checkbox">
-								<label><input type="radio" name="accountname"> {$info["accountname"]}</label>
+								<label><input type="radio" name="accountname" value="{$info["id"]}"> {$info["accountname"]}</label>
 							</div>
 							{/foreach}
 
 							<!-- Show fields -->
 							<div class="form-group">
-								<label for="exampleInputFile">Please select your file to import</label>
-								<input type="file" name="file" id="exampleInputFile">
-							</div>					
+								<div class="input-group mb-3">
+										<div class="custom-file">
+											<input type="file" class="custom-file-input" id="inputGroupFile01" name="file">
+											<label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+										</div>
+								</div>
+							</div>				
 						</div>
 						<button type="submit" class="btn btn-default">Submit</button>
 					</form>

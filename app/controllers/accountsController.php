@@ -134,7 +134,28 @@ class AccountsController extends AppController
 
     public function importcsv(array $params)
     {
-        die('importcsv');
+        $csvHeaders = ['date', 'name', 'description', 'amount'];
+        $csvData = [];
+        
+        // Parse uploaded CSV-file
+        if ( ! empty($_FILES)) {
+            $name = $_FILES["file"]["tmp_name"];
+            $size = $_FILES["file"]["size"];
+
+            // Open file and get CSV-data
+            $fh = fopen($name, "r");
+            while ($data = fgetcsv($fh, $size, ",")) {
+                $csvData[] = $data;
+            }
+            fclose($fh);
+
+            unset($csvData[0]); // Remove headers (first line)
+        }
+        
+        // TODO: Copy code from 'exportcsv' to filter transactions
+        $this->model->insertTransactions($_POST['accountname'], $csvData);
+
+        // TODO: Add view
     }
 
     public function exportcsv(array $params)
@@ -169,7 +190,7 @@ class AccountsController extends AppController
             $csvBody = rtrim($csvBody, ',');
             $csvBody .= "\n";
         }
-        
+
         die($csvBody);
     }
 
