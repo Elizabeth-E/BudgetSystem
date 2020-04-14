@@ -19,6 +19,7 @@
                                  <th scope="col-md-3">amount</th>
                                  <th scope="col-md-3">date</th>
                                  <th scope="col-md-3">frequency</th>
+                                 <th scope="col-md-3">account</th>
                              </thead>
                              <tbody>
                                 {foreach from=$bills item=info}

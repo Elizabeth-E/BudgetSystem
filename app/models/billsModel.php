@@ -35,7 +35,7 @@ class BillsModel extends AppModel
     
     public function getBills(string $username)
     {
-        $dbHandle = $this->database->prepare("SELECT bills.name, bills.amount, bills.date, bills.frequency 
+        $dbHandle = $this->database->prepare("SELECT bills.name, bills.amount, bills.date, bills.frequency, accounts.accountname 
         FROM (((bills INNER JOIN accounts ON bills.accounts_id = accounts.id) 
         INNER JOIN users_has_accounts ON accounts.id = users_has_accounts.accounts_id) 
         INNER JOIN users ON users_has_accounts.users_id = users.id) WHERE users.username = ?");
