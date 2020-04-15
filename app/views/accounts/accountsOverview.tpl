@@ -180,13 +180,11 @@ $('button[data-target]').click(function(event) {
 	$('#import-name').text(type);
 
 	// Auto check checkboxes
-	if (action == 'export') {
-		const checkboxes = form.find(':checkbox');
+	const checkboxes = form.find(':checkbox');
 
-		checkboxes.each(function(key, val) {
-			$(val).prop('checked', true);
-		});
-	}
+	checkboxes.each(function(key, val) {
+		$(val).prop('checked', true);
+	});
 
 	// Update form action
 	$(form).attr('action', formAction + '/' + action + type);
