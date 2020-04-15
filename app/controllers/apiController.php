@@ -1,4 +1,13 @@
 <?php
+
+url: api.php?endpoint=say
+body: "Hello, world!"
+
+if ($_GET['endpoint'] == 'say') {
+	echo $_POST['body'];
+}
+
+
 namespace App\Controllers;
 
 use App\Models;
@@ -6,13 +15,13 @@ use Framework\EmailEngine;
 
 class ApiController extends AppController
 {
-	private $apiKey = '';
-	private $accountId = -1;
-	private $method = 'GET';
+	protected $apiKey = '';
+	protected $accountId = -1;
+	protected $method = 'GET';
     protected $model = NULL;
 	protected $emailEngine = NULL;
 
-	private function response(int $status, $message)
+	protected function response(int $status, $message)
 	{
 		header('Content-Type: application/json');
 		
@@ -25,7 +34,7 @@ class ApiController extends AppController
 		exit($response);
 	}
 	
-	private function handleAuthorization()
+	protected function handleAuthorization()
 	{
 		$this->method = $_SERVER['REQUEST_METHOD'];
 
@@ -41,7 +50,7 @@ class ApiController extends AppController
 		// Error if account does not exist
 		if ($this->accountId == -1)
 		{
-			$this->response(400, 'No API key found!');
+			$this->response(300, 'No API key found!');
 		}
 	}
 
@@ -52,19 +61,61 @@ class ApiController extends AppController
 		$this->emailEngine = new EmailEngine(true);
 	}
 
-	public function accounts(array $params)
+	public function accounts(array $params = [])
 	{
 		$this->handleAuthorization();
+		$route = new Accounts($this->action, $this->params, $this);
 
+		if ($this->method == 'GET')
+		{
+			if (isset($params[0]) && $params[0] == 'read')
+			{
+				$route->read();
+			}
+		}
+
+		if ($this->method == 'DELETE')
+		{
+			if (isset($params[0]) && $params[0] == 'delete')
+			{
+				if ( ! isset($params[1])) {
+					$this->response(400, 'An account number is required for deletion.');
+				}
+
+				$route->delete($params[1]);
+			}
+		}
+	}
+}
+
+class Accounts extends ApiController {
+	private $parent = NULL;
+
+	public function __construct(string $action = "", array $params, $parent)
+	{
+		parent::__construct($action, $params);
+		$this->parent = $parent;
+	}
+
+	public function read()
+	{
 		$accountsModel = new Models\AccountsModel();
-		$accounts = $accountsModel->getAccounts($this->accountId);
+		$accounts = $accountsModel->getAccounts($this->parent->accountId);
 
 		$this->response(200, $accounts);
 	}
 
-	public function bills(array $params)
+	public function delete($id)
 	{
-		exit('bills');
+		$accountsModel = new Models\AccountsModel();
+		$isRemoved = $accountsModel->deleteAccount([$id]);
+
+		if ( ! $isRemoved)
+		{
+			$this->response(400, "Account $id could not be removed!");
+		}
+
+		$this->response(200, "Account $id has been removed!");
 	}
 }
 ?>

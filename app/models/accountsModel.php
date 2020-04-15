@@ -225,11 +225,9 @@ class AccountsModel extends AppModel
             return false;
         }
 		if ( ! $dbHandle->bind_param($bindStr, ...$accountids)) {
-            echo 'Bind param fail (' . $dbHandle->errno . ') ' .$dbHandle->error;
             return false;
         }
         if ( ! $dbHandle->execute()) {
-            echo 'Execute fail (' . $dbHandle->errno . ') ' .$dbHandle->error;
             return false;
         }
 
