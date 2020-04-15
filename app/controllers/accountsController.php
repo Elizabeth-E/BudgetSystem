@@ -77,43 +77,34 @@ class AccountsController extends AppController
         
         $username = \Framework\CryptXOR($_SESSION["username"]);
         $accounts = $this->model->getAccounts((int) $_SESSION["userId"]);
-        $transactions = $this->model->getTransactions((int) $_SESSION["userId"]);
-        // $accounts = getAccount(int $userid);
-
-        $this->view->assign("username", $username);
-        $this->view->assign("accounts", $accounts);
-        $this->view->assign("transactions", $transactions);
-        $this->view->assign("title", "Accounts");
-
-        $status = isset($params[0]) ? $params[0] : '';
-        $this->view->assign("status", $status);
-
-        $this->view->assign("POST_URL", $this->getUrlSelf());
-        
-        $this->setLayout("authenticated");
-        $username = $this->model->getUsername($_SESSION["email"]);
-
-        $this->view->assign("username", $username);
+        $transactions = $this->model->getTransactions((int) $_SESSION["userId"]);     
 
         // Check registration form stuff
         if (!empty($_POST))
         {
-        
             $userid = $_SESSION["userId"];
             $accountname = $_POST["accountname"];
             $accounttype = $_POST["accounttype"];
             $amount = doubleval($_POST["amount"]);
             unset($_POST);
 
-            $this->model->createAccount($userid, $accountname, $accounttype, $amount);
-            header("Refresh:0; url=" . BASE_URL . "/accounts/accountOverview", true, 200); 
-
+            $response = 'fail';
+            if ($this->model->createAccount($userid, $accountname, $accounttype, $amount)) {
+                $response = 'success';
+            }
+            
+            header("Refresh:0; url=" . BASE_URL . "/accounts/accountOverview/$response", true);
         }
 
         $this->view->assign("username", $username);
         $this->view->assign("accounts", $accounts);
         $this->view->assign("transactions", $transactions);
         $this->view->assign("title", "Accounts");
+        $this->view->assign("POST_URL", $this->getUrlSelf());
+        
+        // Query worked?
+        $status = isset($params[0]) ? $params[0] : '';
+        $this->view->assign("status", $status);
 
         $this->view->display("accounts/accountsOverview.tpl");
     }
@@ -121,11 +112,13 @@ class AccountsController extends AppController
     public function deleteAccounts(array $params)
     {
         $accountids = $_POST["accounts"];
-        $hasWorked = $this->model->deleteAccount($accountids);
 
-        $this->view->display("accounts/accountsOverview.tpl");
+        $response = 'fail';
+        if ($this->model->deleteAccount($accountids)) {
+            $response = 'success';
+        }
 
-        header("Refresh:0; url=" . BASE_URL . "/accounts/accountOverview", true); 
+        header("Refresh:0; url=" . BASE_URL . "/accounts/accountOverview/$response", true);
     }
 
     public function generatePDF(array $params)

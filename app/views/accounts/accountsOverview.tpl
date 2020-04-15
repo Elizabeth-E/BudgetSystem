@@ -4,11 +4,11 @@
 		<div class="col-md-offset-1 ">
 			<div class="alert alert-success" style="display: none;">
 				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<strong>Success!</strong> The file has been imported.
+				<strong>Success!</strong> Whatever you tried to do worked!
 			</div>
 			<div class="alert alert-danger" style="display: none;">
 				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<strong>Error!</strong> The file could not be uploaded, please try again.
+				<strong>Error!</strong> Whatever you tried to do failed :-(
 			</div>
 		</div>
 	</div>
