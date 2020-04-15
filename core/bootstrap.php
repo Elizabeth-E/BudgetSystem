@@ -127,6 +127,11 @@ function autoload($class)
 	$className = implode(DS, $className);
 	$classFile = ROOT . DS . $className;
 
+	if(strpos($className, 'spreadsheet') !== false) {
+		require_once PHPSPREADSHEET . 'autoloader.php';
+		require_once PHPSPREADSHEET . 'autoload.php';
+	}
+
 	// If class found directly, include
 	if (file_exists($classFile))
 	{
@@ -146,7 +151,6 @@ function autoload($class)
 				break;
 			}
 		}
-
 		
 		// Load Vendor libraries
 		$className =  array_map("ucfirst", explode(DS, $className));
@@ -161,7 +165,6 @@ function autoload($class)
 
 		foreach ($vendorLibs as $lib)
 		{
-			//\Framework\debug($className);
 			if (file_exists($lib))
 			{
 				require_once $lib;
