@@ -147,14 +147,26 @@ class AccountsModel extends AppModel
 
         // Run query
         $dbHandle = $this->database->prepare("INSERT INTO transactions (date, name, description, amount, accounts_id) VALUES $placeholders");
+        if ( ! $dbHandle) {
+            return false;
+        }
+
         if ( ! $dbHandle->bind_param($bindStr, ...$testData)) {
             echo "Binding parameters failed: (" . $dbHandle->errno . ") " . $dbHandle->error;
+            
+            $dbHandle->close();
+            return false;
         }
         
         if ( ! $dbHandle->execute()) {
             echo "Execute failed: (" . $dbHandle->errno . ") " . $dbHandle->error;
+            
+            $dbHandle->close();
+            return false;
         }
         $dbHandle->close();
+
+        return true;
     }
 
     public function getExportInfo($accountids)

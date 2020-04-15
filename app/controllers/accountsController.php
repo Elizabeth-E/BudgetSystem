@@ -85,6 +85,9 @@ class AccountsController extends AppController
         $this->view->assign("transactions", $transactions);
         $this->view->assign("title", "Accounts");
 
+        $status = isset($params[0]) ? $params[0] : '';
+        $this->view->assign("status", $status);
+
         $this->view->display("accounts/accountsOverview.tpl");
     }
 
@@ -151,6 +154,7 @@ class AccountsController extends AppController
     public function importcsv(array $params)
     {
         $csvData = [];
+        $parsedSuccessfully = false;
 
         // Parse uploaded CSV-file
         if ( ! empty($_FILES)) {
@@ -171,11 +175,18 @@ class AccountsController extends AppController
             }
             fclose($fh);
 
-            unset($csvData[0]); // Remove headers (first line)
+            // If CSV parsing worked, set to true
+            if (count($csvData) == true) {
+                unset($csvData[0]); // Remove headers (first line)
+                $parsedSuccessfully = true;
+            }
         }
 
-        $this->model->insertTransactions($_POST['accountname'], $csvData);
-        die('success');
+        $response = 'fail';
+        if ($parsedSuccessfully && $this->model->insertTransactions($_POST['accountname'], $csvData)) {
+            $response = 'success';
+        }
+        header("Refresh:0; url=" . BASE_URL . "/accounts/accountOverview/$response", true);
     }
 
     public function exportcsv(array $params)
