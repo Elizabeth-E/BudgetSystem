@@ -59,15 +59,31 @@ class AccountsModel extends AppModel
     {
         //example
         $dbHandle = $this->database->prepare("INSERT INTO accounts (type, amount, accountname) VALUES (?,?,?)");
-		$dbHandle->bind_param("sds", $accounttype,$amount, $accountname);
-        $dbHandle->execute();
+        if ( ! $dbHandle) {
+            return false;
+        }
+
+		if ( ! $dbHandle->bind_param("sds", $accounttype,$amount, $accountname)) {
+            return false;
+        }
+        if ( ! $dbHandle->execute()) {
+            return false;
+        }
 
         $dbHandle = $this->database->prepare("INSERT INTO users_has_accounts (accounts_id, users_id) VALUES ((SELECT id FROM accounts Where accounts.accountname = ?), ?)");
-		$dbHandle->bind_param("si", $accountname, $userid);
-		$dbHandle->execute();
-		
-		$dbHandle->close();
+        if ( ! $dbHandle) {
+            return false;
+        }
+		if ( ! $dbHandle->bind_param("si", $accountname, $userid)) {
+            return false;
+        }
+        if ( ! $dbHandle->execute()) {
+            return false;
+        }
 
+        $dbHandle->close();
+
+        return true;
     }
 
     public function getAccounts(int $userid)

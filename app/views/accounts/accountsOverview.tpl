@@ -309,12 +309,12 @@ $('button[data-target]').click(function(event) {
 		$(val).prop('checked', true);
 	});
 
-		// Update form action
-		if (type == 'import' || type == 'export') {
-			$(form).attr('action', formAction + '/' + action + type);
-		}
-	}); {
-		/literal}
+	// Update form action
+	if (type == 'import' || type == 'export') {
+		$(form).attr('action', formAction + '/' + action + type);
+	}
+}); 
+{/literal}
 </script>
 
 {include file="{$layout}\\footer.tpl"}
