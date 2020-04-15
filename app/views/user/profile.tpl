@@ -70,7 +70,12 @@
                                 <div class="col-sm-6 modify" contenteditable="false">{$profile["birthdate"]|date_format:"%d-%m-%Y"}</div>
                                 <div class="clearfix"></div>
                                 <div class="bot-border"></div>
-                                  </div>
+
+                                 <div class="col-sm-6  col-xs-6 tital ">API Key:</div>
+                                <div class="col-sm-6 modify" contenteditable="false">{$profile["validation_token"]}</div>
+                                <div class="clearfix"></div>
+                                <div class="bot-border"></div>
+                            </div>
                         </div>
                     </div>
                     

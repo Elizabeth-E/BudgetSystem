@@ -224,7 +224,7 @@ class UserModel extends AppModel
 	{
 		$email=\Framework\CryptXOR($email);
 
-		$dbHandle = $this->database->prepare("SELECT username, email, firstname, lastname, birthdate, registration_date FROM users WHERE email = ?");
+		$dbHandle = $this->database->prepare("SELECT validation_token, username, email, firstname, lastname, birthdate, registration_date FROM users WHERE email = ?");
 		$dbHandle->bind_param("s", $email);
 		$dbHandle->execute();
 
