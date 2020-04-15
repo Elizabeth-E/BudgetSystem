@@ -220,6 +220,20 @@ class UserModel extends AppModel
 		return boolval($this->isActivated);
 	}
 
+	public function getApiUserId(string $apiKey) : int
+	{
+		$dbHandle = $this->database->prepare("SELECT id FROM users WHERE validation_token = ?");
+		$dbHandle->bind_param("s", $apiKey);
+		$dbHandle->execute();
+
+		$result = $dbHandle->get_result();
+		if ($result->num_rows > 0) {
+			return $result->fetch_assoc()['id'];
+		}
+
+		return -1;
+	}
+
 	public function getProfile(string $email) : array
 	{
 		$email=\Framework\CryptXOR($email);
