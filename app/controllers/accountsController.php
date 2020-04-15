@@ -79,18 +79,6 @@ class AccountsController extends AppController
         $accounts = $this->model->getAccounts((int) $_SESSION["userId"]);
         $transactions = $this->model->getTransactions((int) $_SESSION["userId"]);
         // $accounts = getAccount(int $userid);
-
-        $this->view->assign("username", $username);
-        $this->view->assign("accounts", $accounts);
-        $this->view->assign("transactions", $transactions);
-        $this->view->assign("title", "Accounts");
-
-        $this->view->display("accounts/accountsOverview.tpl");
-    }
-
-    public function addAccount(array $params)
-    {
-		$this->view->assign("title", "Add Account");
         $this->view->assign("POST_URL", $this->getUrlSelf());
         
         $this->setLayout("authenticated");
@@ -101,20 +89,34 @@ class AccountsController extends AppController
         // Check registration form stuff
         if (!empty($_POST))
         {
-            \Framework\debug($_SESSION);
-            \Framework\debug($_POST);
-            // exit();
+        
             $userid = $_SESSION["userId"];
             $accountname = $_POST["accountname"];
             $accounttype = $_POST["accounttype"];
             $amount = doubleval($_POST["amount"]);
+            unset($_POST);
 
             $this->model->createAccount($userid, $accountname, $accounttype, $amount);
+            header("Refresh:0; url=" . BASE_URL . "/accounts/accountOverview", true, 200); 
 
         }
 
-		$this->view->display("accounts/addAccounts.tpl");
+        $this->view->assign("username", $username);
+        $this->view->assign("accounts", $accounts);
+        $this->view->assign("transactions", $transactions);
+        $this->view->assign("title", "Accounts");
 
+        $this->view->display("accounts/accountsOverview.tpl");
+    }
+
+    public function deleteAccounts(array $params)
+    {
+        $accountids = $_POST["accounts"];
+        $hasWorked = $this->model->deleteAccount($accountids);
+
+        $this->view->display("accounts/accountsOverview.tpl");
+
+        header("Refresh:0; url=" . BASE_URL . "/accounts/accountOverview", true); 
     }
 
     public function generatePDF(array $params)

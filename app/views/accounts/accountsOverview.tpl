@@ -27,11 +27,20 @@
 								{/foreach}
 							</tbody>
 						</table>
-						<a href="{$www}/user/edit_profile"><button class="btn btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>add account</button></a>
-						<a href="{$www}/accounts/generatePDF" target="_blank"><button class="btn btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Export as PDF</button></a>
-						<button type="button" class="btn btn-default" data-toggle="modal" data-action="export" data-type="csv" data-target="#export">Export as CSV</button>
-						<button type="button" class="btn btn-default" data-toggle="modal" data-action="export" data-type="xls" data-target="#export">Export as XLS</button>
-						<button type="button" class="btn btn-default" data-toggle="modal" data-action="import" data-type="csv" data-target="#import">Import as CSV</button>
+						<button type="button" class="btn btn-default" data-toggle="modal" data-action="addaccount"
+							data-target="#addaccount"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>add
+							account</button>
+						<button type="button" class="btn btn-default" data-toggle="modal" data-action="deleteaccount"
+							data-target="#deleteaccount"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>delete
+							account(s)</button>
+						<a href="{$www}/accounts/generatePDF" target="_blank"><button class="btn btn-default"><i
+									class="fa fa-pencil-square-o" aria-hidden="true"></i>Export as PDF</button></a>
+						<button type="button" class="btn btn-default" data-toggle="modal" data-action="export"
+							data-type="csv" data-target="#export">Export as CSV</button>
+						<button type="button" class="btn btn-default" data-toggle="modal" data-action="export"
+							data-type="xls" data-target="#export">Export as XLS</button>
+						<button type="button" class="btn btn-default" data-toggle="modal" data-action="import"
+							data-type="csv" data-target="#import">Import as CSV</button>
 					</div>
 				</div>
 
@@ -83,7 +92,7 @@
 					</button>
 				</div>
 				<div class="modal-body">
-				
+
 					<!-- Acttion will be filled by JS -->
 					<form action="" method="post">
 						<div class="form-group">
@@ -92,17 +101,22 @@
 
 							{foreach from=$accounts item=info}
 							<div class="checkbox">
-								<label><input type="checkbox" name="accounts[{$info["accountname"]}]"" value="{$info["id"]}"> {$info["accountname"]}</label>
+								<label><input type="checkbox" name="accounts[{$info[" accountname"]}]"" value="{$info["
+										id"]}"> {$info["accountname"]}</label>
 							</div>
 							{/foreach}
 
 							<!-- Show fields -->
 							<label>Columns to export:</label>
 
-							<div class="checkbox"><label><input type="checkbox" name="fields[date]" value="true"> Date</label></div>
-							<div class="checkbox"><label><input type="checkbox" name="fields[name]" value="true"> Name</label></div>
-							<div class="checkbox"><label><input type="checkbox" name="fields[description]" value="true"> Description</label></div>
-							<div class="checkbox"><label><input type="checkbox" name="fields[amount]" value="true"> Amount</label></div>							
+							<div class="checkbox"><label><input type="checkbox" name="fields[date]" value="true">
+									Date</label></div>
+							<div class="checkbox"><label><input type="checkbox" name="fields[name]" value="true">
+									Name</label></div>
+							<div class="checkbox"><label><input type="checkbox" name="fields[description]" value="true">
+									Description</label></div>
+							<div class="checkbox"><label><input type="checkbox" name="fields[amount]" value="true">
+									Amount</label></div>
 						</div>
 						<button type="submit" class="btn btn-default">Submit</button>
 					</form>
@@ -133,17 +147,22 @@
 
 							{foreach from=$accounts item=info}
 							<div class="checkbox">
-								<label><input type="radio" name="accountname" value="{$info["id"]}"> {$info["accountname"]}</label>
+								<label><input type="radio" name="accountname" value="{$info[" id"]}">
+									{$info["accountname"]}</label>
 							</div>
 							{/foreach}
 
 							<!-- Show fields -->
 							<label>Columns to export:</label>
 
-							<div class="checkbox"><label><input type="checkbox" name="fields[]" value="0"> Date</label></div>
-							<div class="checkbox"><label><input type="checkbox" name="fields[]" value="1"> Name</label></div>
-							<div class="checkbox"><label><input type="checkbox" name="fields[]" value="2"> Description</label></div>
-							<div class="checkbox"><label><input type="checkbox" name="fields[]" value="3"> Amount</label></div>							
+							<div class="checkbox"><label><input type="checkbox" name="fields[]" value="0"> Date</label>
+							</div>
+							<div class="checkbox"><label><input type="checkbox" name="fields[]" value="1"> Name</label>
+							</div>
+							<div class="checkbox"><label><input type="checkbox" name="fields[]" value="2">
+									Description</label></div>
+							<div class="checkbox"><label><input type="checkbox" name="fields[]" value="3">
+									Amount</label></div>
 						</div>
 
 						<!-- Show fields -->
@@ -164,34 +183,118 @@
 		</div>
 	</div>
 	<!-- END MODAL IMPORT -->
+
+	<!-- START MODAL ADD ACCOUNT -->
+	<div class="modal fade" id="addaccount" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="ModalLabel">Add <span id="import-name"></span>Account</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="container">
+						<form method="post" action="{$POST_URL}">
+							<div class="form-group">
+								<label for="accountname">Account Name</label>
+								<input type="text" class="form-control" name="accountname" id="accountname"
+									placeholder="Name">
+							</div>
+							<div class="form-group">
+								<label for="amount">Amount</label>
+								<input type="text" class="form-control" name="amount" id="amount" placeholder="0">
+							</div>
+							<div class="form-group">
+								<label for="type">Select list:</label>
+								<select class="form-control" name="accounttype" id="type">
+									<option>DEBIT</option>
+									<option>CREDITCARD</option>
+									<option>SAVINGS</option>
+								</select>
+							</div>
+							<button type="submit" class="btn btn-default">Submit</button>
+						</form>
+					</div>
+				</div>
+
+				</form>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	</div>
+	<!-- END MODAL ADD ACCOUNT -->
+
+	<!-- START MODAL DELETE ACCOUNT -->
+	<div class="modal fade" id="deleteaccount" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="ModalLabel">Delete <span id="import-name"></span>Account(s)</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="container">
+						<form method="post" action="{$www}/accounts/deleteAccounts">
+							<label>Accounts to delete:</label>
+
+							{foreach from=$accounts item=info}
+							<div class="checkbox">
+								<label><input type="checkbox" name="accounts[]" value="{$info["id"]}"> {$info["accountname"]}</label>
+							</div>
+							{/foreach}
+							<button type="submit" class="btn btn-default">Delete</button>
+						</form> 
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	</div>
+	<!-- END MODAL DELETE ACCOUNT -->
 </main>
 
 <script>
-let formAction = '{$www}/accounts';
-{literal}
-// Update modals on button click (title, checkboxes & form action)
-$('button[data-target]').click(function(event) {
-	// Update modal title
-	const type = $(this).data('type');
-	const action = $(this).data('action');
-	const form = $('#' + action + ' div.modal-body form');
-
-	$('#export-name').text(type);
-	$('#import-name').text(type);
-
-	// Auto check checkboxes
-	if (action == 'export') {
-		const checkboxes = form.find(':checkbox');
-
-		checkboxes.each(function(key, val) {
-			$(val).prop('checked', true);
-		});
+	let formAction = '{$www}/accounts'; {
+		literal
 	}
+	// Update modals on button click (title, checkboxes & form action)
+	$('button[data-target]').click(function (event) {
+		// Update modal title
+		const type = $(this).data('type');
+		const action = $(this).data('action');
+		const form = $('#' + action + ' div.modal-body form');
 
-	// Update form action
-	$(form).attr('action', formAction + '/' + action + type);
-});
-{/literal}
+		$('#export-name').text(type);
+		$('#import-name').text(type);
+
+		// Auto check checkboxes
+		if (action == 'export') {
+			const checkboxes = form.find(':checkbox');
+
+			checkboxes.each(function (key, val) {
+				$(val).prop('checked', true);
+			});
+		}
+
+		// Update form action
+		if (type == 'import' || type == 'export') {
+			$(form).attr('action', formAction + '/' + action + type);
+		}
+	}); {
+		/literal}
 </script>
 
 {include file="{$layout}\\footer.tpl"}

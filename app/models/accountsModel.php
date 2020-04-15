@@ -186,5 +186,27 @@ class AccountsModel extends AppModel
 
     }
 
+    public function deleteAccount($accountids)
+    {
+        $count = count($accountids);
+        $placeholders = implode(',', array_fill(0, $count, '?'));
+        $bindStr = str_repeat('i', $count);
+
+        $dbHandle = $this->database->prepare("DELETE FROM accounts WHERE id IN ($placeholders)");
+        if ( ! $dbHandle) {
+            return false;
+        }
+		if ( ! $dbHandle->bind_param($bindStr, ...$accountids)) {
+            echo 'Bind param fail (' . $dbHandle->errno . ') ' .$dbHandle->error;
+            return false;
+        }
+        if ( ! $dbHandle->execute()) {
+            echo 'Execute fail (' . $dbHandle->errno . ') ' .$dbHandle->error;
+            return false;
+        }
+
+        $dbHandle->close();
+        return true;
+    }
 }
 ?>

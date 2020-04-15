@@ -209,7 +209,8 @@
 
     const $clone = $tableID.find('tbody tr').last().clone(true).removeClass('hide table-line');
 
-    if ($tableID.find('tbody tr').length === 0) {
+    if ($tableID.find('tbody tr').length === 0) 
+    {
 
       $('tbody').append(newTr);
     }
