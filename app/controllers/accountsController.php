@@ -8,8 +8,9 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class AccountsController extends AppController
 {
+    private $tableHeaders = ['date', 'name', 'description', 'amount'];
     protected $model = NULL;
-	protected $emailEngine = NULL;
+    protected $emailEngine = NULL;
 
     private function getExportInfo(array $accounts) {
         // Turn all selected accounts into array
@@ -149,9 +150,8 @@ class AccountsController extends AppController
 
     public function importcsv(array $params)
     {
-        $csvHeaders = ['date', 'name', 'description', 'amount'];
         $csvData = [];
-        
+
         // Parse uploaded CSV-file
         if ( ! empty($_FILES)) {
             $name = $_FILES["file"]["tmp_name"];
@@ -160,17 +160,22 @@ class AccountsController extends AppController
             // Open file and get CSV-data
             $fh = fopen($name, "r");
             while ($data = fgetcsv($fh, $size, ",")) {
+                // Filter out unchecked fields
+                foreach ($this->tableHeaders as $key => $val) {
+                    // If field not in array, clear out
+                    if ( ! in_array($key, $_POST['fields'])) {
+                        $data[$key] = NULL;
+                    }
+                }
                 $csvData[] = $data;
             }
             fclose($fh);
 
             unset($csvData[0]); // Remove headers (first line)
         }
-        
-        // TODO: Copy code from 'exportcsv' to filter transactions
-        $this->model->insertTransactions($_POST['accountname'], $csvData);
 
-        // TODO: Add view
+        $this->model->insertTransactions($_POST['accountname'], $csvData);
+        die('success');
     }
 
     public function exportcsv(array $params)
@@ -183,11 +188,10 @@ class AccountsController extends AppController
         $this->setContentHeader('text/csv', 'export.csv');
 
         // CSV parsing
-        $csvHeaders = ['date', 'name', 'description', 'amount'];
-        $csvBody = implode(',', $csvHeaders) . "\n";
+        $csvBody = implode(',', $this->tableHeaders) . "\n";
         
         foreach ($records as $record) {
-            foreach ($csvHeaders as $header) {
+            foreach ($this->tableHeaders as $header) {
                 if ( ! isset($record[$header])) {
                     $csvBody .= ',';
                 } else {

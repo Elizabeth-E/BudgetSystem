@@ -27,16 +27,11 @@
 								{/foreach}
 							</tbody>
 						</table>
-						<a href="{$www}/user/edit_profile"><button class="btn btn-default"><i
-									class="fa fa-pencil-square-o" aria-hidden="true"></i>add account</button></a>
-						<a href="{$www}/accounts/generatePDF" target="_blank"><button class="btn btn-default"><i
-									class="fa fa-pencil-square-o" aria-hidden="true"></i>Generate PDF</button></a>
-						<button type="button" class="btn btn-default" data-toggle="modal" data-action="import" data-type="csv" data-target="#import">Import
-							(CSV)</button>
-						<button type="button" class="btn btn-default" data-toggle="modal" data-action="export" data-type="csv" data-target="#export">Export
-							(CSV)</button>
-						<button type="button" class="btn btn-default" data-toggle="modal" data-action="export" data-type="xls" data-target="#export">Export
-							(XLS)</button>
+						<a href="{$www}/user/edit_profile"><button class="btn btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>add account</button></a>
+						<a href="{$www}/accounts/generatePDF" target="_blank"><button class="btn btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Export as PDF</button></a>
+						<button type="button" class="btn btn-default" data-toggle="modal" data-action="export" data-type="csv" data-target="#export">Export as CSV</button>
+						<button type="button" class="btn btn-default" data-toggle="modal" data-action="export" data-type="xls" data-target="#export">Export as XLS</button>
+						<button type="button" class="btn btn-default" data-toggle="modal" data-action="import" data-type="csv" data-target="#import">Import as CSV</button>
 					</div>
 				</div>
 
@@ -88,6 +83,7 @@
 					</button>
 				</div>
 				<div class="modal-body">
+				
 					<!-- Acttion will be filled by JS -->
 					<form action="" method="post">
 						<div class="form-group">
@@ -130,7 +126,6 @@
 					</button>
 				</div>
 				<div class="modal-body">
-					<!-- Acttion will be filled by JS -->
 					<form action="" method="post" enctype="multipart/form-data">
 						<div class="form-group">
 							<!-- Show accounts -->
@@ -143,17 +138,24 @@
 							{/foreach}
 
 							<!-- Show fields -->
-							<div class="form-group">
-								<div class="input-group mb-3">
-										<div class="custom-file">
-											<input type="file" class="custom-file-input" id="inputGroupFile01" name="file">
-											<label class="custom-file-label" for="inputGroupFile01">Choose file</label>
-										</div>
-								</div>
-							</div>				
+							<label>Columns to export:</label>
+
+							<div class="checkbox"><label><input type="checkbox" name="fields[]" value="0"> Date</label></div>
+							<div class="checkbox"><label><input type="checkbox" name="fields[]" value="1"> Name</label></div>
+							<div class="checkbox"><label><input type="checkbox" name="fields[]" value="2"> Description</label></div>
+							<div class="checkbox"><label><input type="checkbox" name="fields[]" value="3"> Amount</label></div>							
+						</div>
+
+						<!-- Show fields -->
+						<div class="form-group">
+							<div class="custom-file">
+								<input type="file" class="custom-file-input" id="inputGroupFile01" name="file">
+								<label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+							</div>
 						</div>
 						<button type="submit" class="btn btn-default">Submit</button>
 					</form>
+
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
