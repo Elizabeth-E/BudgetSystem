@@ -24,6 +24,19 @@ class BillsController extends AppController
         $this->setLayout("authenticated");
         $username = \Framework\CryptXOR($_SESSION["username"]);
         $bills = $this->model->getBills($username);
+
+        foreach($bills as $item => $value){
+
+            if ($bills[$item]['status'] == 0)
+            {
+                $bills[$item]['status'] = 'not paid';
+            }
+            else
+            {
+                $bills[$item]['status'] = 'paid';
+            }
+        }
+
         $categories = $this->model->getBillCategories();
         $accounts = $this->model->getAccounts((int) $_SESSION["userId"]);
         

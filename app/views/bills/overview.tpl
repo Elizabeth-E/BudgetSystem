@@ -12,16 +12,17 @@
             <h2 class="section-heading">Bills Overview</h2>
             <button type="button" class="btn btn-default" data-toggle="modal" data-target="#basicExampleModal">add
               bill</button>
-            <button type="button" class="btn btn-default">edit bill(s)</button>
+            <button type="button" class="btn btn-default"  onclick="editbills()">edit bill(s)</button>
 
 
             <table class="table table-striped" id="viewbills">
               <thead>
-                <th scope="col-md-3">name</th>
-                <th scope="col-md-3">amount</th>
-                <th scope="col-md-3">date</th>
-                <th scope="col-md-3">frequency</th>
-                <th scope="col-md-3">account</th>
+                <th scope="col-md-2">name</th>
+                <th scope="col-md-2">amount</th>
+                <th scope="col-md-2">date</th>
+                <th scope="col-md-2">frequency</th>
+                <th scope="col-md-2">account</th>
+                <th scope="col-md-2">status</th>
               </thead>
               <tbody>
                 {foreach from=$bills item=info}
@@ -31,6 +32,7 @@
                   <td>{$info["date"]}</td>
                   <td>{$info["frequency"]}</td>
                   <td>{$info["account"]}</td>
+                  <td>{$info["status"]}</td>
                 </tr>
                 {/foreach}
               </tbody>
@@ -43,11 +45,12 @@
                 <div id="table" class="table-editable">
                   <table class="table table-bordered table-responsive-md table-striped text-center">
                     <thead>
-                      <th scope="col-md-3">name</th>
-                      <th scope="col-md-3">amount</th>
-                      <th scope="col-md-3">date</th>
-                      <th scope="col-md-3">frequency</th>
-                      <th scope="col-md-3">account</th>
+                      <th>name</th>
+                      <th>amount</th>
+                      <th>date</th>
+                      <th>frequency</th>
+                      <th>account</th>
+                      <th></th>
                     </thead>
                     <tbody>
                       {foreach from=$bills item=info}
@@ -55,18 +58,21 @@
                         <td class="pt-3-half" contenteditable="true">{$info["name"]}</td>
                         <td class="pt-3-half" contenteditable="true">{$info["amount"]}</td>
                         <td class="pt-3-half" contenteditable="true">{$info["date"]}</td>
-                        <td class="pt-3-half" contenteditable="true">{$info["frequency"]}</td>
+                        <td class="pt-3-half" contenteditable="true">{$info["frequency"]}
+                        <select id="frequency" name="frequency">
+                            <option value="DAILY">daily</option>
+                            <option value="WEEKLY">weekly</option>
+                            <option value="MONTHLY">monthly</option>
+                            <option value="YEARLY">yearly</option>
+                          </select>
+                        </td>
                         <td class="pt-3-half" contenteditable="true">{$info["account"]}</td>
+                        <td>
+                          <span class="table-remove"><button type="button"
+                              class="btn btn-danger btn-rounded btn-sm my-0">Remove</button></span>
+                        </td>
                       </tr>
-                      <span class="table-up"><a href="#!" class="indigo-text"><i class="fas fa-long-arrow-alt-up"
-                            aria-hidden="true"></i></a></span>
-                      <span class="table-down"><a href="#!" class="indigo-text"><i class="fas fa-long-arrow-alt-down"
-                            aria-hidden="true"></i></a></span>
-                      </td>
-                      <td>
-                        <span class="table-remove"><button type="button"
-                            class="btn btn-danger btn-rounded btn-sm my-0">Remove</button></span>
-                      </td>
+                      
                       {/foreach}
 
                       </tr>
@@ -136,8 +142,8 @@
               </select>
             </div>
 
-            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="RefreshPage">Close</button>
-            <button type="submit" class="btn btn-default" id="RefreshPage">Add</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="RefreshPage" onclick="viewbills()">Close</button>
+            <button type="submit" class="btn btn-default" id="RefreshPage" onclick="viewbills()">Add</button>
           </form>
 
           <!----------form end--------->
@@ -178,9 +184,6 @@
       a.style.display = "none";
     }
   }
-
-
-
 
   const $tableID = $('#table');
   const $BTN = $('#export-btn');
