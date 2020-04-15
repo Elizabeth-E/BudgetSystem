@@ -78,27 +78,10 @@ class AccountsController extends AppController
         $username = \Framework\CryptXOR($_SESSION["username"]);
         $accounts = $this->model->getAccounts((int) $_SESSION["userId"]);
         $transactions = $this->model->getTransactions((int) $_SESSION["userId"]);
-        // $accounts = getAccount(int $userid);
-
-        $this->view->assign("username", $username);
-        $this->view->assign("accounts", $accounts);
-        $this->view->assign("transactions", $transactions);
-        $this->view->assign("title", "Accounts");
-
-        $status = isset($params[0]) ? $params[0] : '';
-        $this->view->assign("status", $status);
-
-        $this->view->assign("POST_URL", $this->getUrlSelf());
-        
-        $this->setLayout("authenticated");
-        $username = $this->model->getUsername($_SESSION["email"]);
-
-        $this->view->assign("username", $username);
 
         // Check registration form stuff
         if (!empty($_POST))
         {
-        
             $userid = $_SESSION["userId"];
             $accountname = $_POST["accountname"];
             $accounttype = $_POST["accounttype"];
@@ -107,12 +90,12 @@ class AccountsController extends AppController
 
             $this->model->createAccount($userid, $accountname, $accounttype, $amount);
             header("Refresh:0; url=" . BASE_URL . "/accounts/accountOverview", true, 200); 
-
         }
 
         $this->view->assign("username", $username);
         $this->view->assign("accounts", $accounts);
         $this->view->assign("transactions", $transactions);
+        $this->view->assign("POST_URL", $this->getUrlSelf());
         $this->view->assign("title", "Accounts");
 
         $this->view->display("accounts/accountsOverview.tpl");
