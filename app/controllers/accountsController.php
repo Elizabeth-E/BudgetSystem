@@ -218,20 +218,47 @@ class AccountsController extends AppController
         $sheet = $spreadsheet->getActiveSheet();
 
         // Create headers
-        $headers = ['date', 'name', 'description', 'amount'];
         $counter = 2;
+
         $sheet->setCellValue("A1", 'date');
         $sheet->setCellValue("B1", 'name');
         $sheet->setCellValue("C1", 'description');
         $sheet->setCellValue("D1", 'amount');
 
+        // Look at first record to get available headers
+        $availableHeaders = [];
+        foreach ($this->tableHeaders as $header) {
+            if (isset($records[0][$header])) {
+                $availableHeaders[] = $header;
+            }
+        }
+
         // Create body
         foreach ($records as $record) {
-            $sheet->setCellValue("A{$counter}", $record['date']);
-            $sheet->setCellValue("B{$counter}", $record['name']);
-            $sheet->setCellValue("C{$counter}", $record['description']);
-            $sheet->setCellValue("D{$counter}", $record['amount']);
-            
+            if (in_array('date', $availableHeaders)) {
+                $sheet->setCellValue("A{$counter}", $record['date']);
+            } else {
+                $sheet->setCellValue("A{$counter}", '');
+            }
+
+            if (in_array('name', $availableHeaders)) {
+                $sheet->setCellValue("B{$counter}", $record['name']);
+            } else {
+                $sheet->setCellValue("B{$counter}", '');
+            }
+
+            if (in_array('description', $availableHeaders)) {
+                $sheet->setCellValue("C{$counter}", $record['description']);
+            } else {
+                $sheet->setCellValue("C{$counter}", '');
+            }
+
+            if (in_array('amount', $availableHeaders)) {
+                $sheet->setCellValue("D{$counter}", $record['amount']);
+            } else {
+                $sheet->setCellValue("D{$counter}", '');
+            }
+
             $counter++;
         }
 
