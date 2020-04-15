@@ -79,6 +79,15 @@ class AccountsController extends AppController
         $accounts = $this->model->getAccounts((int) $_SESSION["userId"]);
         $transactions = $this->model->getTransactions((int) $_SESSION["userId"]);
         // $accounts = getAccount(int $userid);
+
+        $this->view->assign("username", $username);
+        $this->view->assign("accounts", $accounts);
+        $this->view->assign("transactions", $transactions);
+        $this->view->assign("title", "Accounts");
+
+        $status = isset($params[0]) ? $params[0] : '';
+        $this->view->assign("status", $status);
+
         $this->view->assign("POST_URL", $this->getUrlSelf());
         
         $this->setLayout("authenticated");
@@ -153,6 +162,7 @@ class AccountsController extends AppController
     public function importcsv(array $params)
     {
         $csvData = [];
+        $parsedSuccessfully = false;
 
         // Parse uploaded CSV-file
         if ( ! empty($_FILES)) {
@@ -173,11 +183,18 @@ class AccountsController extends AppController
             }
             fclose($fh);
 
-            unset($csvData[0]); // Remove headers (first line)
+            // If CSV parsing worked, set to true
+            if (count($csvData) == true) {
+                unset($csvData[0]); // Remove headers (first line)
+                $parsedSuccessfully = true;
+            }
         }
 
-        $this->model->insertTransactions($_POST['accountname'], $csvData);
-        die('success');
+        $response = 'fail';
+        if ($parsedSuccessfully && $this->model->insertTransactions($_POST['accountname'], $csvData)) {
+            $response = 'success';
+        }
+        header("Refresh:0; url=" . BASE_URL . "/accounts/accountOverview/$response", true);
     }
 
     public function exportcsv(array $params)
@@ -220,20 +237,47 @@ class AccountsController extends AppController
         $sheet = $spreadsheet->getActiveSheet();
 
         // Create headers
-        $headers = ['date', 'name', 'description', 'amount'];
         $counter = 2;
+
         $sheet->setCellValue("A1", 'date');
         $sheet->setCellValue("B1", 'name');
         $sheet->setCellValue("C1", 'description');
         $sheet->setCellValue("D1", 'amount');
 
+        // Look at first record to get available headers
+        $availableHeaders = [];
+        foreach ($this->tableHeaders as $header) {
+            if (isset($records[0][$header])) {
+                $availableHeaders[] = $header;
+            }
+        }
+
         // Create body
         foreach ($records as $record) {
-            $sheet->setCellValue("A{$counter}", $record['date']);
-            $sheet->setCellValue("B{$counter}", $record['name']);
-            $sheet->setCellValue("C{$counter}", $record['description']);
-            $sheet->setCellValue("D{$counter}", $record['amount']);
-            
+            if (in_array('date', $availableHeaders)) {
+                $sheet->setCellValue("A{$counter}", $record['date']);
+            } else {
+                $sheet->setCellValue("A{$counter}", '');
+            }
+
+            if (in_array('name', $availableHeaders)) {
+                $sheet->setCellValue("B{$counter}", $record['name']);
+            } else {
+                $sheet->setCellValue("B{$counter}", '');
+            }
+
+            if (in_array('description', $availableHeaders)) {
+                $sheet->setCellValue("C{$counter}", $record['description']);
+            } else {
+                $sheet->setCellValue("C{$counter}", '');
+            }
+
+            if (in_array('amount', $availableHeaders)) {
+                $sheet->setCellValue("D{$counter}", $record['amount']);
+            } else {
+                $sheet->setCellValue("D{$counter}", '');
+            }
+
             $counter++;
         }
 

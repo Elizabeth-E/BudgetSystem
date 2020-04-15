@@ -1,4 +1,18 @@
 {include file="{$layout}\\header.tpl"}
+<div class="container">
+	<div class="row">
+		<div class="col-md-offset-1 ">
+			<div class="alert alert-success" style="display: none;">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<strong>Success!</strong> The file has been imported.
+			</div>
+			<div class="alert alert-danger" style="display: none;">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<strong>Error!</strong> The file could not be uploaded, please try again.
+			</div>
+		</div>
+	</div>
+</div>
 
 <main>
 	<div class="container">
@@ -267,27 +281,33 @@
 </main>
 
 <script>
-	let formAction = '{$www}/accounts'; {
-		literal
-	}
-	// Update modals on button click (title, checkboxes & form action)
-	$('button[data-target]').click(function (event) {
-		// Update modal title
-		const type = $(this).data('type');
-		const action = $(this).data('action');
-		const form = $('#' + action + ' div.modal-body form');
+let formAction = '{$www}/accounts';
+let status = '{$status}';
+
+{literal}
+// Show warning message if import fails
+if (status == 'success') {
+	$('.alert.alert-success').show();
+} else if (status == 'fail') {
+	$('.alert.alert-danger').show();
+}
+
+// Update modals on button click (title, checkboxes & form action)
+$('button[data-target]').click(function(event) {
+	// Update modal title
+	const type = $(this).data('type');
+	const action = $(this).data('action');
+	const form = $('#' + action + ' div.modal-body form');
 
 		$('#export-name').text(type);
 		$('#import-name').text(type);
 
-		// Auto check checkboxes
-		if (action == 'export') {
-			const checkboxes = form.find(':checkbox');
+	// Auto check checkboxes
+	const checkboxes = form.find(':checkbox');
 
-			checkboxes.each(function (key, val) {
-				$(val).prop('checked', true);
-			});
-		}
+	checkboxes.each(function(key, val) {
+		$(val).prop('checked', true);
+	});
 
 		// Update form action
 		if (type == 'import' || type == 'export') {
