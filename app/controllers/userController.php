@@ -356,11 +356,12 @@ class UserController extends AppController
         $this->setLayout("authenticated");
 
         $profile = $this->model->getProfile($_SESSION["email"]);
-		$this->view->assign("profile", $profile);
-
-        $this->view->assign("title", "Profile");
-		$this->view->display("user/profile.tpl");
 		
+
+		$username = \Framework\CryptXOR($_SESSION["username"]);
+		$userid = intval($_SESSION["userId"]);
+		$userpics = $this->model->getUserPics($userid);
+
 
 		//upload multiple files
 		$errors = array();
@@ -370,11 +371,14 @@ class UserController extends AppController
 		$KB = 1024;
 		$totalBytes = $bytes * $KB;
 		$UploadFolder = "img";
+		$path = "/webroot/" . $UploadFolder; 
 		
 		$counter = 0;
 
-		if (isset($_FILES["files"])) {
-			foreach($_FILES["files"]["tmp_name"] as $key => $val){
+		if (isset($_FILES["files"])) 
+		{
+			foreach($_FILES["files"]["tmp_name"] as $key => $val)
+			{
 				$temp = $_FILES["files"]["tmp_name"][$key];
 				$name = $_FILES["files"]["name"][$key];
 				
@@ -393,24 +397,30 @@ class UserController extends AppController
 				// }
 				
 				$ext = pathinfo($name, PATHINFO_EXTENSION);
-				if(in_array($ext, $extension) == false){
+				if(in_array($ext, $extension) == false)
+				{
 					$UploadOk = false;
 					array_push($errors, $name." is invalid file type.");
 				}
 				
-				if(file_exists($UploadFolder."/".$name) == true){
+				if(file_exists($UploadFolder."/".$name) == true)
+				{
 					$UploadOk = false;
 					array_push($errors, $name." file is already exist.");
 				}
 				
-				if($UploadOk == true){
+				if($UploadOk == true)
+				{
 					move_uploaded_file($temp,$UploadFolder."/".$name);
 					array_push($uploadedFiles, $name);
+					$path = $path."/".$name;
+					$this->model->addPicture($path, $userid);
 				}
 			}
 		}
 		
-		if($counter>0){
+		if($counter>0)
+		{
 			if(count($errors)>0)
 			{
 				echo "<b>Errors:</b>";
@@ -434,9 +444,16 @@ class UserController extends AppController
 				echo count($uploadedFiles)." file(s) are successfully uploaded.";
 			}                               
 		}
-		else{
+		else
+		{
 			echo "Please, Select file(s) to upload.";
 		}
+
+		$this->view->assign("profile", $profile);
+		$this->view->assign("userpics", $userpics);
+
+        $this->view->assign("title", "Profile");
+		$this->view->display("user/profile.tpl");
     }
 }
 ?>

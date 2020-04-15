@@ -235,7 +235,7 @@ class UserModel extends AppModel
 		{
 			$profile = $result->fetch_assoc();
 		}
-
+		$dbHandle->close();
 		return $profile;
 	} 
 
@@ -246,5 +246,36 @@ class UserModel extends AppModel
 		$dbHandle->execute();
 		
 		$dbHandle->close();
+	}
+
+	public function addPicture($path, $userid)
+	{
+		$dbHandle = $this->database->prepare("INSERT INTO pictures (path, users_id) VALUES (?,?)");
+		$dbHandle->bind_param("si", $path, $userid);
+		$dbHandle->execute();
+		
+		$dbHandle->close();
+	}
+
+	public function getUserPics($userid)
+	{
+		$dbHandle = $this->database->prepare("SELECT path FROM pictures WHERE users_id = ?");
+		$dbHandle->bind_param("i", $userid);
+		$dbHandle->execute();
+
+		$result = $dbHandle->get_result();
+
+		$userpics = [];
+		if ($result->num_rows > 0)
+		{
+			while($row = $result->fetch_assoc()) {
+                $userpics [] = [
+					"path" => $row["path"]
+                ];
+            }
+
+		}
+		$dbHandle->close();
+		return $userpics ;
 	}
 }  
