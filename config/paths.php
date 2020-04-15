@@ -34,6 +34,9 @@ define("PHP_MAILER", ROOT . DS . "vendors" . DS . "phpmailer" . DS . "src" . DS)
 //Path to FPDF
 define("FPDF", ROOT . DS . "vendors" . DS . "FPDF" . DS);
 
+//Path to PhpSpreadsheet
+define("PHPSPREADSHEET", ROOT . DS . "vendors" . DS . "PhpSpreadsheet" . DS);
+
 // Path to the temp directory
 define("TMP", ROOT . DS . "tmp" . DS);
 
