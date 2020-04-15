@@ -3,6 +3,8 @@ namespace App\Controllers;
 
 use App\Models;
 use Framework\EmailEngine;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class AccountsController extends AppController
 {
@@ -43,6 +45,19 @@ class AccountsController extends AppController
         }
 
         return $filteredData;
+    }
+
+    private function setContentHeader(string $contentType, string $fileName) {
+        ob_clean(); // Clean buffer
+
+        // Tell the browser that a file of type text/csv is offered
+        header("Content-Type: $contentType; charset=utf-8");
+        header("Content-Disposition: attachment; filename=$fileName");
+
+        // // Disable cache
+        header("Expires: 0");
+        header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+        header("Cache-Control: private", false);
     }
 
 	public function __construct(string $action = "", array $params)
@@ -164,16 +179,8 @@ class AccountsController extends AppController
         $records = $this->getExportInfo($_POST['accounts']);
         $records = $this->filterExportInfo($_POST['fields'], $records);
 
-        ob_clean(); // Clean buffer
-
-        // Tell the browser that a file of type text/csv is offered
-        header('Content-Type: text/csv; charset=utf-8');
-        header('Content-Disposition: attachment; filename=data.csv');
-
-        // // Disable cache
-        header("Expires: 0");
-        header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-        header("Cache-Control: private", false);
+        // Set content header
+        $this->setContentHeader('text/csv', 'export.csv');
 
         // CSV parsing
         $csvHeaders = ['date', 'name', 'description', 'amount'];
@@ -196,7 +203,36 @@ class AccountsController extends AppController
 
     public function exportxls(array $params)
     {
-        die('exportxls');
+        // Get and filter records based on submitted data
+        $records = $this->getExportInfo($_POST['accounts']);
+        $records = $this->filterExportInfo($_POST['fields'], $records);
+
+        // Set content header
+        $this->setContentHeader('application/vnd.ms-excel', 'export.xlsx');
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Create headers
+        $headers = ['date', 'name', 'description', 'amount'];
+        $counter = 2;
+        $sheet->setCellValue("A1", 'date');
+        $sheet->setCellValue("B1", 'name');
+        $sheet->setCellValue("C1", 'description');
+        $sheet->setCellValue("D1", 'amount');
+
+        // Create body
+        foreach ($records as $record) {
+            $sheet->setCellValue("A{$counter}", $record['date']);
+            $sheet->setCellValue("B{$counter}", $record['name']);
+            $sheet->setCellValue("C{$counter}", $record['description']);
+            $sheet->setCellValue("D{$counter}", $record['amount']);
+            
+            $counter++;
+        }
+
+        $writer = new Xlsx($spreadsheet);
+        $writer->save('php://output'); // Print to STDOUT
     }
 
     public function importxls(array $params)
