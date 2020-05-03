@@ -234,6 +234,20 @@ class UserModel extends AppModel
 		return -1;
 	}
 
+	public function getApiUsername(int $userid) : string
+	{
+		$dbHandle = $this->database->prepare("SELECT username FROM users WHERE id = ?");
+		$dbHandle->bind_param("i", $userid);
+		$dbHandle->execute();
+
+		$result = $dbHandle->get_result();
+		if ($result->num_rows > 0) {
+			return $result->fetch_assoc()['username'];
+		}
+
+		return '';
+	}
+
 	public function getProfile(string $email) : array
 	{
 		$email=\Framework\CryptXOR($email);

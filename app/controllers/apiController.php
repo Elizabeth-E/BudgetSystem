@@ -9,6 +9,7 @@ class ApiController extends AppController
 {
 	protected $apiKey = '';
 	protected $accountId = -1;
+	protected $username = '';
 	protected $method = 'GET';
     protected $model = NULL;
 	protected $emailEngine = NULL;
@@ -37,6 +38,7 @@ class ApiController extends AppController
 
 			$userModel = new Models\UserModel();
 			$this->accountId = $userModel->getApiUserId($this->apiKey);
+			$this->username = $userModel->getApiUsername($this->accountId);
 		}
 		
 		// Error if account does not exist
@@ -54,7 +56,7 @@ class ApiController extends AppController
 		$this->method = $_SERVER['REQUEST_METHOD'];
 	}
 
-	public static function parseJSON(string $jsonString) : array
+	protected function parseJSON(string $jsonString) : array
 	{
 		$jsonObject = json_decode($jsonString, true);
 		if ($jsonObject === null && json_last_error() !== JSON_ERROR_NONE) {
@@ -86,7 +88,7 @@ class ApiController extends AppController
 				}
 				break;
 			default:
-				$this->response(401, 'Invalid HTTP Verb');
+				$this->response(400, 'Invalid HTTP Verb');
 		}
 
 		if ($this->method == 'DELETE')
@@ -110,18 +112,8 @@ class ApiController extends AppController
 			case 'POST':
 				$route->create();
 				break;
-			case 'DELETE':
-				if ( ! isset($params[1]) || empty($params[1])) 
-				{
-					$this->response(400, 'An account number is required for deletion.');
-				}
-				else
-				{
-					$route->delete($params[1]);
-				}
-				break;
 			default:
-				$this->response(401, 'Invalid HTTP Verb');
+				$this->response(400, 'Invalid HTTP Verb');
 		}
 
 		if ($this->method == 'DELETE')
@@ -155,7 +147,7 @@ class Accounts extends ApiController {
 	{
 		$accountsModel = new Models\AccountsModel();
 		
-		$account = $this::parseJSON($_POST['account']);
+		$account = $this->parent->parseJSON($_POST['account']);
 		if (count($account) ==  0)
 		{
 			$this->response(400, 'Invalid JSON data submitted!');
@@ -201,8 +193,10 @@ class Bills extends ApiController {
 
 	public function read()
 	{
+		$BillssModel = new Models\BillsModel();
+		$bills = $BillssModel->getBills($this->parent->username);
 
-		$this->response(200, 'Not implemented yet!');
+		$this->response(200, $bills);
 	}
 
 	public function create()
