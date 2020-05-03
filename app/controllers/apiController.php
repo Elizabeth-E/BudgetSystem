@@ -97,6 +97,41 @@ class ApiController extends AppController
 			}
 		}
 	}
+
+	public function bills(array $params = [])
+	{
+		$this->handleAuthorization();
+		$route = new Bills($this->action, $this->params, $this);
+
+		switch ($this->method) {
+			case 'GET':
+				$route->read();
+				break;
+			case 'POST':
+				$route->create();
+				break;
+			case 'DELETE':
+				if ( ! isset($params[1]) || empty($params[1])) 
+				{
+					$this->response(400, 'An account number is required for deletion.');
+				}
+				else
+				{
+					$route->delete($params[1]);
+				}
+				break;
+			default:
+				$this->response(401, 'Invalid HTTP Verb');
+		}
+
+		if ($this->method == 'DELETE')
+		{
+			if (isset($params[0]) && $params[0] == 'delete')
+			{
+
+			}
+		}
+	}
 }
 
 class Accounts extends ApiController {
@@ -152,6 +187,27 @@ class Accounts extends ApiController {
 		}
 
 		$this->response(200, "Account $id has been removed!");
+	}
+}
+
+class Bills extends ApiController {
+	private $parent = NULL;
+
+	public function __construct(string $action = "", array $params, $parent)
+	{
+		parent::__construct($action, $params);
+		$this->parent = $parent;
+	}
+
+	public function read()
+	{
+
+		$this->response(200, 'Not implemented yet!');
+	}
+
+	public function create()
+	{
+		$this->response(200, 'Not implemented yet!');
 	}
 }
 ?>
