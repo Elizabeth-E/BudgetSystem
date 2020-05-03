@@ -23,23 +23,20 @@
 
                             <div class="box-body">
                                 <div class="col-sm-8">
-                                    <div align="center"> <img alt="User Pic" src="https://x1.xingassets.com/assets/frontend_minified/img/users/nobody_m.original.jpg"
-                                            id="profile-image1" class="img-circle img-responsive">
-
+                                    <div align="center">
+                                        {foreach from=$userpics item=info}
+                                        <img alt="User Pic" src="{$www}{$info["path"]}"
+                                                id="profile-image1" class="img-circle img-responsive">
+                                        {/foreach}
                                         <input id="profile-image-upload" class="hidden" type="file">
                                         <form method="post" enctype="multipart/form-data" name="formUploadFile">      
                                             <label>Select file to upload:</label>
                                             <input type="file" name="files[]" multiple="multiple" />
                                             <input type="submit" value="Upload File" name="btnSubmit"/>
                                         </form>
-                                        <div style="color:#999;">click here to change profile image</div>
-                                        <!--Upload Image Js And Css-->
-
                                     </div>
 
                                     <br>
-
-                                    <!-- /input-group -->
                                 </div>
 
                                 <div class="clearfix"></div>
