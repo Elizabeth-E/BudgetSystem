@@ -64,9 +64,11 @@ class AccountsModel extends AppModel
         }
 
 		if ( ! $dbHandle->bind_param("sds", $accounttype,$amount, $accountname)) {
+            echo "Binding parameters failed: (" . $dbHandle->errno . ") " . $dbHandle->error;
             return false;
         }
         if ( ! $dbHandle->execute()) {
+            echo "Execute failed: (" . $dbHandle->errno . ") " . $dbHandle->error;
             return false;
         }
 

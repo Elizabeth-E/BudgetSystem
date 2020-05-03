@@ -201,7 +201,28 @@ class Bills extends ApiController {
 
 	public function create()
 	{
-		$this->response(200, 'Not implemented yet!');
+		$BillssModel = new Models\BillsModel();
+		$bill = $this->parent->parseJSON($_POST['bill']);
+		if (count($bill) ==  0)
+		{
+			$this->response(400, 'Invalid JSON data submitted!');
+		}
+
+		$isCreated = $BillssModel->addBill(
+			$bill['name'],
+			$bill['amount'],
+			$bill['date'],
+			$bill['frequency'],
+			$bill['accountId'],
+			$bill['billCategoryId']
+		);
+
+		if ( ! $isCreated)
+		{
+			$this->response(400, "Bill ".$bill['name']." could not be created!");
+		}
+
+		$this->response(200, "Bill " .$bill['name']. " has been created!");
 	}
 }
 ?>

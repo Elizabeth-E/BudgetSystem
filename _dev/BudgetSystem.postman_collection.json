@@ -19,8 +19,18 @@
 								"type": "text"
 							}
 						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "account",
+									"value": "{\"userid\": 15, \"accountname\": \"mitchel\",  \"accounttype\": \"SAVINGS\", \"amount\": 0.00}",
+									"type": "text"
+								}
+							]
+						},
 						"url": {
-							"raw": "http://localhost/budget_system/api/accounts/create",
+							"raw": "http://localhost/budget_system/api/accounts",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -28,8 +38,7 @@
 							"path": [
 								"budget_system",
 								"api",
-								"accounts",
-								"create"
+								"accounts"
 							]
 						}
 					},
@@ -47,7 +56,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost/budget_system/api/accounts/read",
+							"raw": "http://localhost/budget_system/api/accounts",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -55,8 +64,7 @@
 							"path": [
 								"budget_system",
 								"api",
-								"accounts",
-								"read"
+								"accounts"
 							]
 						}
 					},
@@ -74,7 +82,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost/budget_system/api/accounts/delete/10",
+							"raw": "http://localhost/budget_system/api/accounts/delete/15",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -84,7 +92,7 @@
 								"api",
 								"accounts",
 								"delete",
-								"10"
+								"15"
 							]
 						}
 					},
@@ -107,8 +115,18 @@
 								"type": "text"
 							}
 						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "bill",
+									"value": "{\"name\": \"test_bill\", \"amount\": 0.00, \"date\": \"1992-11-23\",  \"frequency\":  \"MONTHLY\",  \"accountId\":  15, \"billCategoryId\":  2}",
+									"type": "text"
+								}
+							]
+						},
 						"url": {
-							"raw": "http://localhost/budget_system/api/bills/create",
+							"raw": "http://localhost/budget_system/api/bills",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -116,8 +134,7 @@
 							"path": [
 								"budget_system",
 								"api",
-								"bills",
-								"create"
+								"bills"
 							]
 						}
 					},
@@ -135,7 +152,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost/budget_system/api/bills/read",
+							"raw": "http://localhost/budget_system/api/bills",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -143,8 +160,7 @@
 							"path": [
 								"budget_system",
 								"api",
-								"bills",
-								"read"
+								"bills"
 							]
 						}
 					},

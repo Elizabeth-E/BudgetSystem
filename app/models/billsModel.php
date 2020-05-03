@@ -66,17 +66,26 @@ class BillsModel extends AppModel
     }
 
       
-    public function addBill(string $name, float $amount, string $date, string $frequency,int $accountId, int $billCatId)
+    public function addBill(string $name, float $amount, string $date, string $frequency,int $accountId, int $billCatId) : bool
     {
         
         $dbHandle = $this->database->prepare("INSERT INTO bills (name, amount, date, frequency, accounts_id, bill_categories_id) VALUES (?,?,?,?,?,?)");
-		$dbHandle->bind_param("sdssii", $name, $amount, $date, $frequency, $accountId, $billCatId);
-        
-        if (!$dbHandle->execute()) {
-            echo "Execute failed: (" . $dbHandle->errno . ") " . $dbHandle->error;
-        }
-        $dbHandle->close();
 
+        if ( ! $dbHandle) {
+            return false;
+        }
+		if ( ! $dbHandle->bind_param("sdssii", $name, $amount, $date, $frequency, $accountId, $billCatId)) {
+            echo "Binding parameters failed: (" . $dbHandle->errno . ") " . $dbHandle->error;
+            return false;
+        }
+
+        // TODO: Execute failed: (1242) Subquery returns more than 1 row
+        if ( ! $dbHandle->execute()) {
+            echo "Execute failed: (" . $dbHandle->errno . ") " . $dbHandle->error;
+            return false;
+        }
+
+        return true;
     }
 
     public function getBillCategories()
