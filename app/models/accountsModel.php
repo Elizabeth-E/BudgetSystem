@@ -78,6 +78,8 @@ class AccountsModel extends AppModel
             echo "Binding parameters failed: (" . $dbHandle->errno . ") " . $dbHandle->error;
             return false;
         }
+
+        // TODO: Execute failed: (1242) Subquery returns more than 1 row
         if ( ! $dbHandle->execute()) {
             echo "Execute failed: (" . $dbHandle->errno . ") " . $dbHandle->error;
             return false;
