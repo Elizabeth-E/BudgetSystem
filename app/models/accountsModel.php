@@ -75,9 +75,11 @@ class AccountsModel extends AppModel
             return false;
         }
 		if ( ! $dbHandle->bind_param("si", $accountname, $userid)) {
+            echo "Binding parameters failed: (" . $dbHandle->errno . ") " . $dbHandle->error;
             return false;
         }
         if ( ! $dbHandle->execute()) {
+            echo "Execute failed: (" . $dbHandle->errno . ") " . $dbHandle->error;
             return false;
         }
 

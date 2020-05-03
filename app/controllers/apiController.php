@@ -1,13 +1,5 @@
 <?php
 
-url: api.php?endpoint=say
-body: "Hello, world!"
-
-if ($_GET['endpoint'] == 'say') {
-	echo $_POST['body'];
-}
-
-
 namespace App\Controllers;
 
 use App\Models;
@@ -59,30 +51,49 @@ class ApiController extends AppController
 		parent::__construct($action, $params);
 		$this->action = $action;
 		$this->emailEngine = new EmailEngine(true);
+		$this->method = $_SERVER['REQUEST_METHOD'];
 	}
 
+	public static function parseJSON(string $jsonString) : array
+	{
+		$jsonObject = json_decode($jsonString, true);
+		if ($jsonObject === null && json_last_error() !== JSON_ERROR_NONE) {
+			return [];
+		}
+		return $jsonObject;
+	}
+	
 	public function accounts(array $params = [])
 	{
 		$this->handleAuthorization();
 		$route = new Accounts($this->action, $this->params, $this);
 
-		if ($this->method == 'GET')
-		{
-			if (isset($params[0]) && $params[0] == 'read')
-			{
+		switch ($this->method) {
+			case 'GET':
 				$route->read();
-			}
+				break;
+			case 'POST':
+				$route->create();
+				break;
+			case 'DELETE':
+				if ( ! isset($params[1]) || empty($params[1])) 
+				{
+					$this->response(400, 'An account number is required for deletion.');
+				}
+				else
+				{
+					$route->delete($params[1]);
+				}
+				break;
+			default:
+				$this->response(401, 'Invalid HTTP Verb');
 		}
 
 		if ($this->method == 'DELETE')
 		{
 			if (isset($params[0]) && $params[0] == 'delete')
 			{
-				if ( ! isset($params[1])) {
-					$this->response(400, 'An account number is required for deletion.');
-				}
 
-				$route->delete($params[1]);
 			}
 		}
 	}
@@ -103,6 +114,31 @@ class Accounts extends ApiController {
 		$accounts = $accountsModel->getAccounts($this->parent->accountId);
 
 		$this->response(200, $accounts);
+	}
+
+	public function create()
+	{
+		$accountsModel = new Models\AccountsModel();
+		
+		$account = $this::parseJSON($_POST['account']);
+		if (count($account) ==  0)
+		{
+			$this->response(400, 'Invalid JSON data submitted!');
+		}
+
+		$isCreated = $accountsModel->createAccount(
+			$account['userid'],
+			$account['accountname'],
+			$account['accounttype'],
+			$account['amount']
+		);
+
+		if ( ! $isCreated)
+		{
+			$this->response(400, "Account ".$account['userid']." could not be created!");
+		}
+
+		$this->response(200, "Account " . $account['userid'] . " has been created!");
 	}
 
 	public function delete($id)
