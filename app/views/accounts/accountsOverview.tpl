@@ -108,7 +108,7 @@
 				<div class="modal-body">
 
 					<!-- Acttion will be filled by JS -->
-					<form action="" method="post">
+					<form action="" method="post" style="width: 38em;">
 						<div class="form-group">
 							<!-- Show accounts -->
 							<label>Accounts to export:</label>
@@ -154,7 +154,7 @@
 					</button>
 				</div>
 				<div class="modal-body">
-					<form action="" method="post" enctype="multipart/form-data">
+					<form action="" method="post" enctype="multipart/form-data" style="width: 38em;">
 						<div class="form-group">
 							<!-- Show accounts -->
 							<label>Select an account to import too</label>
@@ -169,14 +169,10 @@
 							<!-- Show fields -->
 							<label>Columns to export:</label>
 
-							<div class="checkbox"><label><input type="checkbox" name="fields[]" value="0"> Date</label>
-							</div>
-							<div class="checkbox"><label><input type="checkbox" name="fields[]" value="1"> Name</label>
-							</div>
-							<div class="checkbox"><label><input type="checkbox" name="fields[]" value="2">
-									Description</label></div>
-							<div class="checkbox"><label><input type="checkbox" name="fields[]" value="3">
-									Amount</label></div>
+							<div class="checkbox"><label><input type="checkbox" name="fields[]" value="0"> Date</label></div>
+							<div class="checkbox"><label><input type="checkbox" name="fields[]" value="1"> Name</label></div>
+							<div class="checkbox"><label><input type="checkbox" name="fields[]" value="2">Description</label></div>
+							<div class="checkbox"><label><input type="checkbox" name="fields[]" value="3">Amount</label></div>
 						</div>
 
 						<!-- Show fields -->
@@ -210,7 +206,7 @@
 				</div>
 				<div class="modal-body">
 					<div class="container">
-						<form method="post" action="{$POST_URL}">
+						<form method="post" action="{$POST_URL}" style="width: 38em;">
 							<div class="form-group">
 								<label for="accountname">Account Name</label>
 								<input type="text" class="form-control" name="accountname" id="accountname"
@@ -257,7 +253,7 @@
 				</div>
 				<div class="modal-body">
 					<div class="container">
-						<form method="post" action="{$www}/accounts/deleteAccounts">
+						<form method="post" action="{$www}/accounts/deleteAccounts" style="width: 38em;">
 							<label>Accounts to delete:</label>
 
 							{foreach from=$accounts item=info}
