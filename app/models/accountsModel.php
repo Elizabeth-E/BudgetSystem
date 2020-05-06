@@ -168,6 +168,7 @@ class AccountsModel extends AppModel
         }
 
         // Run query
+        // TODO: Execute failed: (1452) Cannot add or update a child row: a foreign key constraint fails (`budget_system_db`.`transactions`, CONSTRAINT `fk_transcations_accounts1` FOREIGN KEY (`accounts_id`) REFERENCES `accounts` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION)
         $dbHandle = $this->database->prepare("INSERT INTO transactions (date, name, description, amount, accounts_id) VALUES $placeholders");
         if ( ! $dbHandle) {
             return false;

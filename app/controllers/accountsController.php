@@ -89,7 +89,8 @@ class AccountsController extends AppController
             unset($_POST);
 
             $response = 'fail';
-            if ($this->model->createAccount($userid, $accountname, $accounttype, $amount)) {
+            if ($this->model->createAccount($userid, $accountname, $accounttype, $amount)) 
+            {
                 $response = 'success';
             }
             

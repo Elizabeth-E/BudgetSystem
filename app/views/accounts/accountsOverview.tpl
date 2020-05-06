@@ -41,20 +41,15 @@
 								{/foreach}
 							</tbody>
 						</table>
-						<button type="button" class="btn btn-default" data-toggle="modal" data-action="addaccount"
-							data-target="#addaccount"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>add
-							account</button>
-						<button type="button" class="btn btn-default" data-toggle="modal" data-action="deleteaccount"
-							data-target="#deleteaccount"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>delete
-							account(s)</button>
-						<a href="{$www}/accounts/generatePDF" target="_blank"><button class="btn btn-default"><i
-									class="fa fa-pencil-square-o" aria-hidden="true"></i>Export as PDF</button></a>
-						<button type="button" class="btn btn-default" data-toggle="modal" data-action="export"
-							data-type="csv" data-target="#export">Export as CSV</button>
-						<button type="button" class="btn btn-default" data-toggle="modal" data-action="export"
-							data-type="xls" data-target="#export">Export as XLS</button>
-						<button type="button" class="btn btn-default" data-toggle="modal" data-action="import"
-							data-type="csv" data-target="#import">Import as CSV</button>
+
+						<button type="button" class="btn btn-default" data-toggle="modal" data-action="addaccount" data-target="#addaccount"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>add account</button>
+						<button type="button" class="btn btn-default" data-toggle="modal" data-action="deleteaccount" data-target="#deleteaccount"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>delete account(s)</button>
+						
+						<a href="{$www}/accounts/generatePDF" target="_blank"><button class="btn btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Export as PDF</button></a>
+						
+						<button type="button" class="btn btn-default" data-toggle="modal" data-action="export" data-type="csv" data-target="#export">Export as CSV</button>
+						<button type="button" class="btn btn-default" data-toggle="modal" data-action="export" data-type="xls" data-target="#export">Export as XLS</button>
+						<button type="button" class="btn btn-default" data-toggle="modal" data-action="import" data-type="csv" data-target="#import">Import as CSV</button>
 					</div>
 				</div>
 
@@ -115,22 +110,17 @@
 
 							{foreach from=$accounts item=info}
 							<div class="checkbox">
-								<label><input type="checkbox" name="accounts[{$info[" accountname"]}]"" value="{$info["
-										id"]}"> {$info["accountname"]}</label>
+								<label><input type="checkbox" name="accounts[{$info["accountname"]}]"" value="{$info["id"]}"> {$info["accountname"]}</label>
 							</div>
 							{/foreach}
 
 							<!-- Show fields -->
 							<label>Columns to export:</label>
 
-							<div class="checkbox"><label><input type="checkbox" name="fields[date]" value="true">
-									Date</label></div>
-							<div class="checkbox"><label><input type="checkbox" name="fields[name]" value="true">
-									Name</label></div>
-							<div class="checkbox"><label><input type="checkbox" name="fields[description]" value="true">
-									Description</label></div>
-							<div class="checkbox"><label><input type="checkbox" name="fields[amount]" value="true">
-									Amount</label></div>
+							<div class="checkbox"><label><input type="checkbox" name="fields[date]" value="true">Date</label></div>
+							<div class="checkbox"><label><input type="checkbox" name="fields[name]" value="true">Name</label></div>
+							<div class="checkbox"><label><input type="checkbox" name="fields[description]" value="true">Description</label></div>
+							<div class="checkbox"><label><input type="checkbox" name="fields[amount]" value="true">Amount</label></div>
 						</div>
 						<button type="submit" class="btn btn-default">Submit</button>
 					</form>
@@ -161,8 +151,7 @@
 
 							{foreach from=$accounts item=info}
 							<div class="checkbox">
-								<label><input type="radio" name="accountname" value="{$info[" id"]}">
-									{$info["accountname"]}</label>
+								<label><input type="radio" name="accountname" value="{$info[" id"]}">{$info["accountname"]}</label>
 							</div>
 							{/foreach}
 
@@ -295,8 +284,8 @@ $('button[data-target]').click(function(event) {
 	const action = $(this).data('action');
 	const form = $('#' + action + ' div.modal-body form');
 
-		$('#export-name').text(type);
-		$('#import-name').text(type);
+	$('#export-name').text(type);
+	$('#import-name').text(type);
 
 	// Auto check checkboxes
 	const checkboxes = form.find(':checkbox');
@@ -306,7 +295,7 @@ $('button[data-target]').click(function(event) {
 	});
 
 	// Update form action
-	if (type == 'import' || type == 'export') {
+	if (action == 'import' || action == 'export') {
 		$(form).attr('action', formAction + '/' + action + type);
 	}
 }); 
