@@ -220,11 +220,39 @@ class UserModel extends AppModel
 		return boolval($this->isActivated);
 	}
 
+	public function getApiUserId(string $apiKey) : int
+	{
+		$dbHandle = $this->database->prepare("SELECT id FROM users WHERE validation_token = ?");
+		$dbHandle->bind_param("s", $apiKey);
+		$dbHandle->execute();
+
+		$result = $dbHandle->get_result();
+		if ($result->num_rows > 0) {
+			return $result->fetch_assoc()['id'];
+		}
+
+		return -1;
+	}
+
+	public function getApiUsername(int $userid) : string
+	{
+		$dbHandle = $this->database->prepare("SELECT username FROM users WHERE id = ?");
+		$dbHandle->bind_param("i", $userid);
+		$dbHandle->execute();
+
+		$result = $dbHandle->get_result();
+		if ($result->num_rows > 0) {
+			return $result->fetch_assoc()['username'];
+		}
+
+		return '';
+	}
+
 	public function getProfile(string $email) : array
 	{
 		$email=\Framework\CryptXOR($email);
 
-		$dbHandle = $this->database->prepare("SELECT username, email, firstname, lastname, birthdate, registration_date FROM users WHERE email = ?");
+		$dbHandle = $this->database->prepare("SELECT validation_token, username, email, firstname, lastname, birthdate, registration_date FROM users WHERE email = ?");
 		$dbHandle->bind_param("s", $email);
 		$dbHandle->execute();
 
@@ -235,7 +263,7 @@ class UserModel extends AppModel
 		{
 			$profile = $result->fetch_assoc();
 		}
-
+		$dbHandle->close();
 		return $profile;
 	} 
 
@@ -246,5 +274,36 @@ class UserModel extends AppModel
 		$dbHandle->execute();
 		
 		$dbHandle->close();
+	}
+
+	public function addPicture($path, $userid)
+	{
+		$dbHandle = $this->database->prepare("INSERT INTO pictures (path, users_id) VALUES (?,?)");
+		$dbHandle->bind_param("si", $path, $userid);
+		$dbHandle->execute();
+		
+		$dbHandle->close();
+	}
+
+	public function getUserPics($userid)
+	{
+		$dbHandle = $this->database->prepare("SELECT path FROM pictures WHERE users_id = ?");
+		$dbHandle->bind_param("i", $userid);
+		$dbHandle->execute();
+
+		$result = $dbHandle->get_result();
+
+		$userpics = [];
+		if ($result->num_rows > 0)
+		{
+			while($row = $result->fetch_assoc()) {
+                $userpics [] = [
+					"path" => $row["path"]
+                ];
+            }
+
+		}
+		$dbHandle->close();
+		return $userpics ;
 	}
 }  

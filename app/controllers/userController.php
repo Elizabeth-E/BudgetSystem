@@ -107,7 +107,6 @@ class UserController extends AppController
             $password = $_POST["password"];
             $passwordConfirm = $_POST["password_confirmation"];
             
-            // TODO: What happens if password is empty here?
             $passwordsMatch = $this->model->checkPassword($password, $passwordConfirm);
 
 			if (!empty($email) && !empty($password) && !empty($passwordConfirm) && !empty($username) && $passwordsMatch)
@@ -121,7 +120,6 @@ class UserController extends AppController
                 }
                 else
                 {
-                    // TODO: Make error checking
                     $validationToken = $this->model->generateValidationToken($email);
                     $this->model->register($username, $email, $password, $validationToken, $firstname, $lastname, $birthday);
                     
@@ -256,8 +254,6 @@ class UserController extends AppController
 			$validationToken = $params["activationToken"];
 			$password = $_POST["password"];
 			$passwordConfirm = $_POST["password_confirmation"];
-
-			// TODO: What happens if password is empty here?
 			$passwordsMatch = $this->model->checkPassword($password, $passwordConfirm);
 
 			if (!empty($email) && !empty($validationToken) && !empty($password) && !empty($passwordConfirm) && $passwordsMatch)
@@ -356,10 +352,100 @@ class UserController extends AppController
         $this->setLayout("authenticated");
 
         $profile = $this->model->getProfile($_SESSION["email"]);
-        $this->view->assign("profile", $profile);
+		
+
+		$username = \Framework\CryptXOR($_SESSION["username"]);
+		$userid = intval($_SESSION["userId"]);
+		$userpics = $this->model->getUserPics($userid);
+
+
+		//upload multiple files
+		$errors = array();
+		$uploadedFiles = array();
+		$extension = array("jpeg","jpg","png","gif");
+		$bytes = 1024;
+		$KB = 1024;
+		$totalBytes = $bytes * $KB;
+		$UploadFolder = "img";
+		$path = "/webroot/" . $UploadFolder; 
+		
+		$counter = 0;
+
+		if (isset($_FILES["files"])) 
+		{
+			foreach($_FILES["files"]["tmp_name"] as $key => $val)
+			{
+				$temp = $_FILES["files"]["tmp_name"][$key];
+				$name = $_FILES["files"]["name"][$key];
+				
+				if(empty($temp))
+				{
+					break;
+				}
+				
+				$counter++;
+				$UploadOk = true;
+				
+				// if($_FILES["files"]["size"][$key] > $totalBytes)
+				// {
+				//     $UploadOk = false;
+				//     array_push($errors, $name." file size is larger than the 1 MB.");
+				// }
+				
+				$ext = pathinfo($name, PATHINFO_EXTENSION);
+				if(in_array($ext, $extension) == false)
+				{
+					$UploadOk = false;
+					array_push($errors, $name." is invalid file type.");
+				}
+				
+				if(file_exists($UploadFolder."/".$name) == true)
+				{
+					$UploadOk = false;
+					array_push($errors, $name." file is already exist.");
+				}
+				
+				if($UploadOk == true)
+				{
+					move_uploaded_file($temp,$UploadFolder."/".$name);
+					array_push($uploadedFiles, $name);
+					$path = $path."/".$name;
+					$this->model->addPicture($path, $userid);
+				}
+			}
+		}
+		
+		if($counter>0)
+		{
+			if(count($errors)>0)
+			{
+				echo "<b>Errors:</b>";
+				echo "<br/><ul>";
+				foreach($errors as $error)
+				{
+					echo "<li>".$error."</li>";
+				}
+				echo "</ul><br/>";
+			}
+			
+			if(count($uploadedFiles)>0){
+				echo "<b>Uploaded Files:</b>";
+				echo "<br/><ul>";
+				foreach($uploadedFiles as $fileName)
+				{
+					echo "<li>".$fileName."</li>";
+				}
+				echo "</ul><br/>";
+				
+				echo count($uploadedFiles)." file(s) are successfully uploaded.";
+			}                               
+		}
+
+		$this->view->assign("profile", $profile);
+		$this->view->assign("userpics", $userpics);
 
         $this->view->assign("title", "Profile");
-        $this->view->display("user/profile.tpl");
+		$this->view->display("user/profile.tpl");
     }
 }
 ?>

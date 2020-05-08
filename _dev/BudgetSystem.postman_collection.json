@@ -1,0 +1,174 @@
+{
+	"info": {
+		"_postman_id": "232e24e8-0c3b-455a-9849-f7bff4de6c55",
+		"name": "BudgetSystem",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "accounts",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "3e99c3fd1aea32a795add79397439f1a",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "account",
+									"value": "{\"userid\": 15, \"accountname\": \"mitchel\",  \"accounttype\": \"SAVINGS\", \"amount\": 0.00}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost/budget_system/api/accounts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"budget_system",
+								"api",
+								"accounts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "read",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "3e99c3fd1aea32a795add79397439f1a",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost/budget_system/api/accounts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"budget_system",
+								"api",
+								"accounts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "3e99c3fd1aea32a795add79397439f1a",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost/budget_system/api/accounts/delete/15",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"budget_system",
+								"api",
+								"accounts",
+								"delete",
+								"15"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "bills",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "3e99c3fd1aea32a795add79397439f1a",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "bill",
+									"value": "{\"name\": \"test_bill\", \"amount\": 0.00, \"date\": \"1992-11-23\",  \"frequency\":  \"MONTHLY\",  \"accountId\":  15, \"billCategoryId\":  2}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost/budget_system/api/bills",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"budget_system",
+								"api",
+								"bills"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "read",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "3e99c3fd1aea32a795add79397439f1a",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost/budget_system/api/bills",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"budget_system",
+								"api",
+								"bills"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

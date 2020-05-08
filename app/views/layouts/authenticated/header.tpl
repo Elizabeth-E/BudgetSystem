@@ -14,6 +14,8 @@
 	<link href="{$www}/css/style.css" rel="stylesheet">
 	{* <link href="{$www}/css/darktheme.css" rel="stylesheet"> *}
 
+	<script src="{$www}/js/jquery-3.3.1.min.js"></script>
+
 	<title>{$title}</title>
 </head>
 
@@ -30,4 +32,3 @@
 				<li class="indent"><a href="{$www}/savings/savingsOverview"><i class="fas fa-piggy-bank fa-2x" aria-hidden="true"></i>   Savings</a></li>
 			</ul>
 		</div>
-	</div>
