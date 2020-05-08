@@ -444,10 +444,6 @@ class UserController extends AppController
 				echo count($uploadedFiles)." file(s) are successfully uploaded.";
 			}                               
 		}
-		else
-		{
-			echo "Please, Select file(s) to upload.";
-		}
 
 		$this->view->assign("profile", $profile);
 		$this->view->assign("userpics", $userpics);

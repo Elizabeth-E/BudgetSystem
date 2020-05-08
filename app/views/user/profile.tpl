@@ -87,11 +87,13 @@
         <div class = "paypal">
             <div id="paypal-button" ></div>
          </div>
-        
+            <a data-pin-do="embedPin" href="https://www.pinterest.com/pin/99360735500167749/"></a>
+    <script async defer src="//assets.pinterest.com/js/pinit.js"></script>
     </div>
 
 
     </div>
+
 </main>
 
 

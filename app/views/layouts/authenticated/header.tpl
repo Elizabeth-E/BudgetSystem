@@ -32,4 +32,3 @@
 				<li class="indent"><a href="{$www}/savings/savingsOverview"><i class="fas fa-piggy-bank fa-2x" aria-hidden="true"></i>   Savings</a></li>
 			</ul>
 		</div>
-	</div>

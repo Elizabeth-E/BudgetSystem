@@ -43,7 +43,7 @@
               <h3 class="card-header text-center font-weight-bold text-uppercase py-4">Edit Bills</h3>
               <div class="card-body">
                 <div id="table" class="table-editable">
-                  <table class="table table-bordered table-responsive-md table-striped text-center">
+                  <table class="table table-bordered table-responsive-md table-striped text-center" style="width: inherit;">
                     <thead>
                       <th>name</th>
                       <th>amount</th>
@@ -157,9 +157,7 @@
 <script>
   $(document).ready(function () {
     $(".typeahead").typeahead({
-      source: {
-        $billNames
-      },
+      source: {$billNames},
       autoSelect: true
     });
 

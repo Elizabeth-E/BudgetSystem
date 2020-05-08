@@ -22,7 +22,7 @@
 					<div class="panel-heading">
 						<h4 style="color:#03b1ce;">{$username}'s Accounts </h4></span>
 					</div>
-					<div class="container">
+					<div class="container" style="width: inherit;">
 						<table class="table table-striped">
 							<thead>
 								<th scope="col-md-3">Account name</th>
@@ -42,14 +42,16 @@
 							</tbody>
 						</table>
 
-						<button type="button" class="btn btn-default" data-toggle="modal" data-action="addaccount" data-target="#addaccount"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>add account</button>
-						<button type="button" class="btn btn-default" data-toggle="modal" data-action="deleteaccount" data-target="#deleteaccount"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>delete account(s)</button>
-						
-						<a href="{$www}/accounts/generatePDF" target="_blank"><button class="btn btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Export as PDF</button></a>
-						
-						<button type="button" class="btn btn-default" data-toggle="modal" data-action="export" data-type="csv" data-target="#export">Export as CSV</button>
-						<button type="button" class="btn btn-default" data-toggle="modal" data-action="export" data-type="xls" data-target="#export">Export as XLS</button>
-						<button type="button" class="btn btn-default" data-toggle="modal" data-action="import" data-type="csv" data-target="#import">Import as CSV</button>
+						<div style="padding-bottom: 1em;">
+							<button type="button" class="btn btn-default" data-toggle="modal" data-action="addaccount" data-target="#addaccount"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>add account</button>
+							<button type="button" class="btn btn-default" data-toggle="modal" data-action="deleteaccount" data-target="#deleteaccount"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>delete account(s)</button>
+							
+							<a href="{$www}/accounts/generatePDF" target="_blank"><button class="btn btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Generate PDF</button></a>
+							<button type="button" class="btn btn-default" data-toggle="modal" data-action="export" data-type="xls" data-target="#export">Generate XLS</button>
+							
+							<button type="button" class="btn btn-default" data-toggle="modal" data-action="export" data-type="csv" data-target="#export">Export as CSV</button>
+							<button type="button" class="btn btn-default" data-toggle="modal" data-action="import" data-type="csv" data-target="#import">Import as CSV</button>
+						</div>
 					</div>
 				</div>
 
@@ -58,7 +60,7 @@
 					<div class="panel-heading">
 						<h4 style="color:#03b1ce;">{$info["accountname"]} </h4></span>
 					</div>
-					<div class="container">
+					<div class="container" style="width: inherit;">
 						<table class="table table-striped">
 							<thead>
 								<th scope="col-md-3">date</th>

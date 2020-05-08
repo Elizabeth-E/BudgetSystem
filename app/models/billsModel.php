@@ -65,7 +65,8 @@ class BillsModel extends AppModel
 
     }
 
-      
+     
+    // TODO: Fatal error: Uncaught TypeError: Argument 5 passed to App\Models\BillsModel::addBill() must be of the type int, string given, called in C:\xampp\htdocs\budget_system\app\controllers\billsController.php on line 60 and defined in C:\xampp\htdocs\budget_system\app\models\billsModel.php:69
     public function addBill(string $name, float $amount, string $date, string $frequency,int $accountId, int $billCatId) : bool
     {
         
