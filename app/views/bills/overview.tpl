@@ -129,7 +129,7 @@
               <label for="username">Account</label>
               <select id="category" name="accountId">
                 {foreach from=$accounts item=info}
-                <option value="{$info[" accountId"]}">{$info["accountname"]}</option>
+                <option value="{$info["accountId"]}">{$info["accountname"]}</option>
                 {/foreach}
               </select>
             </div>
@@ -137,7 +137,7 @@
               <label for="username">Bill Category</label>
               <select id="category" name="billCatId">
                 {foreach from=$categories item=info}
-                <option value="{$info[" billCatId"]}">{$info["name"]}</option>
+                <option value="{$info["billCatId"]}">{$info["name"]}</option>
                 {/foreach}
               </select>
             </div>

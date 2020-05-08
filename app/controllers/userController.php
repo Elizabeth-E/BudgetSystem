@@ -107,7 +107,6 @@ class UserController extends AppController
             $password = $_POST["password"];
             $passwordConfirm = $_POST["password_confirmation"];
             
-            // TODO: What happens if password is empty here?
             $passwordsMatch = $this->model->checkPassword($password, $passwordConfirm);
 
 			if (!empty($email) && !empty($password) && !empty($passwordConfirm) && !empty($username) && $passwordsMatch)
@@ -121,7 +120,6 @@ class UserController extends AppController
                 }
                 else
                 {
-                    // TODO: Make error checking
                     $validationToken = $this->model->generateValidationToken($email);
                     $this->model->register($username, $email, $password, $validationToken, $firstname, $lastname, $birthday);
                     
@@ -256,8 +254,6 @@ class UserController extends AppController
 			$validationToken = $params["activationToken"];
 			$password = $_POST["password"];
 			$passwordConfirm = $_POST["password_confirmation"];
-
-			// TODO: What happens if password is empty here?
 			$passwordsMatch = $this->model->checkPassword($password, $passwordConfirm);
 
 			if (!empty($email) && !empty($validationToken) && !empty($password) && !empty($passwordConfirm) && $passwordsMatch)

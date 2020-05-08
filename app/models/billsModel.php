@@ -65,11 +65,8 @@ class BillsModel extends AppModel
 
     }
 
-     
-    // TODO: Fatal error: Uncaught TypeError: Argument 5 passed to App\Models\BillsModel::addBill() must be of the type int, string given, called in C:\xampp\htdocs\budget_system\app\controllers\billsController.php on line 60 and defined in C:\xampp\htdocs\budget_system\app\models\billsModel.php:69
-    public function addBill(string $name, float $amount, string $date, string $frequency,int $accountId, int $billCatId) : bool
-    {
-        
+    public function addBill(string $name, float $amount, string $date, string $frequency, int $accountId, int $billCatId) : bool
+    {        
         $dbHandle = $this->database->prepare("INSERT INTO bills (name, amount, date, frequency, accounts_id, bill_categories_id) VALUES (?,?,?,?,?,?)");
 
         if ( ! $dbHandle) {
@@ -80,7 +77,6 @@ class BillsModel extends AppModel
             return false;
         }
 
-        // TODO: Execute failed: (1242) Subquery returns more than 1 row
         if ( ! $dbHandle->execute()) {
             echo "Execute failed: (" . $dbHandle->errno . ") " . $dbHandle->error;
             return false;
