@@ -77,7 +77,7 @@ class AccountsController extends AppController
         
         $username = \Framework\CryptXOR($_SESSION["username"]);
         $accounts = $this->model->getAccounts((int) $_SESSION["userId"]);
-        $transactions = $this->model->getTransactions((int) $_SESSION["userId"]);     
+        $transactions = $this->model->getTransactions((int) $_SESSION["userId"]);
 
         // Check registration form stuff
         if (!empty($_POST))

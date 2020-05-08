@@ -153,7 +153,7 @@
 
 							{foreach from=$accounts item=info}
 							<div class="checkbox">
-								<label><input type="radio" name="accountname" value="{$info[" id"]}">{$info["accountname"]}</label>
+								<label><input type="radio" name="accountname" value="{$info["id"]}">{$info["accountname"]}</label>
 							</div>
 							{/foreach}
 
